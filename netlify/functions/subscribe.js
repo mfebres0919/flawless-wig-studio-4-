@@ -11,20 +11,26 @@ exports.handler = async (event) => {
       body: JSON.stringify({ email })
     });
     const createData = await createRes.json();
-    console.log('Create subscriber:', JSON.stringify(createData));
 
-    // Step 2: Add to segment (email must not be encoded)
+    // Step 2: Add to segment
     const segRes = await fetch('https://api.flodesk.com/v1/subscribers/' + email + '/segments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': auth },
       body: JSON.stringify({ segment_ids: ['69a48f6febf332bb71733711'] })
     });
     const segData = await segRes.json();
-    console.log('Add to segment:', JSON.stringify(segData));
 
-    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    // Return full response so we can debug from browser
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        createStatus: createRes.status,
+        createData,
+        segStatus: segRes.status,
+        segData
+      })
+    };
   } catch(err) {
-    console.log('Error:', err.message);
-    return { statusCode: 500, body: JSON.stringify({ ok: false, error: err.message }) };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
