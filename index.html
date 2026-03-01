@@ -636,9 +636,6 @@ setTimeout(function(){
   </div>
 </div>
 
-<!-- Hidden iframe for Google Form submission -->
-<iframe name="wlHiddenFrame" id="wlHiddenFrame" style="display:none"></iframe>
-
 <!-- FLOAT BOOK -->
 <button class="float-book" id="floatBook">
   <div class="float-dot"></div>
@@ -1124,23 +1121,17 @@ document.getElementById('wlSubmit').addEventListener('click',function(){
   if(!name){ document.getElementById('wlName').style.borderColor='var(--pink-dk)'; return; }
   if(!em||!em.includes('@')){ document.getElementById('wlEmail').style.borderColor='var(--pink-dk)'; return; }
   // ── Submit silently to Google Sheets via Google Form ──
-  // ── Submit to Google Sheets via hidden iframe (avoids CORS block) ──
-  var formURL='https://docs.google.com/forms/d/e/1FAIpQLSdInq5Ox01IL-cMHnPLLuyPB0o6XzFC9gvJPjuqEHvA9N7SQw/formResponse';
-  var iframe=document.getElementById('wlHiddenFrame');
-  var tempForm=document.createElement('form');
-  tempForm.action=formURL;
-  tempForm.method='POST';
-  tempForm.target='wlHiddenFrame';
-  tempForm.style.display='none';
-  var fields={'entry.1343506361':name,'entry.1831961405':em,'entry.1434906594':phone,'entry.1183971031':service,'entry.2117657656':date};
-  Object.keys(fields).forEach(function(k){
-    var input=document.createElement('input');
-    input.type='hidden';input.name=k;input.value=fields[k];
-    tempForm.appendChild(input);
-  });
-  document.body.appendChild(tempForm);
-  tempForm.submit();
-  setTimeout(function(){ document.body.removeChild(tempForm); },1000);
+  // ── Submit to Formspree ──
+  var formspreeURL='https://formspree.io/f/mkovapzo';
+  var formData=new FormData();
+  formData.append('name', name);
+  formData.append('email', em);
+  formData.append('phone', phone);
+  formData.append('service', service);
+  formData.append('date', date);
+  fetch(formspreeURL,{method:'POST',body:formData,headers:{'Accept':'application/json'}})
+    .then(function(res){ console.log('Formspree:', res.status); })
+    .catch(function(err){ console.warn('Formspree error:', err); });
   document.querySelector('.wl-panel').innerHTML='<div style="text-align:center;padding:28px 18px"><div style="font-family:Playfair Display,serif;font-size:3.2rem;color:var(--pink-lt);margin-bottom:14px">&#10003;</div><div style="font-family:Playfair Display,serif;font-size:1.7rem;font-weight:400;margin-bottom:11px">You\'re on the waitlist!</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.85;max-width:290px;margin:0 auto">Hi <strong style="color:var(--pink-lt)">'+name+'</strong> — we\'ll reach out to <strong style="color:var(--pink-lt)">'+em+'</strong> the moment a spot opens.</p><button onclick="closeWaitlist()" style="margin-top:24px;display:inline-flex;padding:11px 26px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Close</button></div>';
 });
 
