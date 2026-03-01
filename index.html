@@ -243,16 +243,16 @@ nav.banner-gone{top:0}
 .specials-grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:clamp(24px,5vw,44px)}
 @media(min-width:560px){.specials-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:900px){.specials-grid{grid-template-columns:repeat(3,1fr)}}
-.deal-card{background:rgba(255,255,255,.03);border:1px solid rgba(232,160,176,.1);border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.deal-card{background:rgba(255, 255, 255, 0.052);border:1px solid rgba(232, 160, 176, 0.507);border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
 .deal-card:hover{border-color:rgba(232,160,176,.32);transform:translateY(-4px)}
 .deal-card::before{content:'';position:absolute;top:-36px;right:-36px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,176,.07) 0%,transparent 70%);pointer-events:none}
 .deal-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:12px}
 .deal-title{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,2.8vw,1.35rem);font-weight:400;color:var(--white);margin-bottom:6px;line-height:1.2}
-.deal-desc{font-size:.74rem;color:rgba(255,255,255,.42);line-height:1.75;margin-bottom:14px}
+.deal-desc{font-size:.74rem;color:rgba(255, 255, 255, 0.822);line-height:1.75;margin-bottom:14px}
 .deal-price{display:flex;align-items:baseline;gap:9px;margin-bottom:14px}
 .deal-new{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;color:var(--pink-lt)}
-.deal-old{font-size:.74rem;color:rgba(255,255,255,.26);text-decoration:line-through}
-.deal-expires{font-size:.56rem;letter-spacing:.14em;color:rgba(255,255,255,.26);margin-top:10px;text-transform:uppercase}
+.deal-old{font-size:.74rem;color:rgba(255, 255, 255, 0.822);text-decoration:line-through}
+.deal-expires{font-size:.56rem;letter-spacing:.14em;color:rgba(255, 255, 255, 0.822);margin-top:10px;text-transform:uppercase}
 
 /* ═══════════════════════
    GALLERY
@@ -468,6 +468,11 @@ footer{background:var(--black2);padding:clamp(36px,8vw,76px) var(--pad) clamp(18
 .lightbox.open .lb-img{transform:scale(1)}
 .lb-close{position:absolute;top:16px;right:20px;font-size:1.4rem;color:rgba(255,255,255,.42);cursor:pointer;line-height:1;transition:color .25s;background:none;border:none;-webkit-tap-highlight-color:transparent}
 .lb-close:hover{color:var(--pink)}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);font-size:3rem;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;padding:10px 18px;transition:color .25s;-webkit-tap-highlight-color:transparent;line-height:1;user-select:none}
+.lb-prev{left:10px}
+.lb-next{right:10px}
+.lb-prev:hover,.lb-next:hover{color:var(--pink)}
+@media(max-width:500px){.lb-prev{left:2px}.lb-next{right:2px}}
 
 /* ═══════════════════════
    BOOKING MODAL
@@ -524,10 +529,9 @@ footer{background:var(--black2);padding:clamp(36px,8vw,76px) var(--pad) clamp(18
 /* ═══════════════════════
    FLOAT BOOK BUTTON
 ═══════════════════════ */
-.float-book{position:fixed;bottom:22px;right:22px;z-index:190;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;border-radius:100px;padding:12px 20px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(196,96,122,.5);transition:transform .3s,box-shadow .3s,opacity .4s;opacity:0;pointer-events:none;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.float-book{position:fixed;bottom:22px;right:22px;z-index:190;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;border-radius:50%;width:48px;height:48px;cursor:pointer;box-shadow:0 8px 28px rgba(196,96,122,.5);transition:transform .3s,box-shadow .3s,opacity .4s;opacity:0;pointer-events:none;-webkit-tap-highlight-color:transparent}
 .float-book.visible{opacity:1;pointer-events:all}
-.float-book:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(196,96,122,.62)}
-.float-dot{width:6px;height:6px;border-radius:50%;background:var(--white);opacity:.8;animation:blink 2s ease infinite}
+.float-book:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(196,96,122,.62)}.float-dot{width:6px;height:6px;border-radius:50%;background:var(--white);opacity:.8;animation:blink 2s ease infinite}
 @media(max-width:380px){.float-book span{display:none}.float-book{padding:13px 14px}}
 
 /* ═══════════════════════
@@ -663,16 +667,17 @@ setTimeout(function(){
   </div>
 </div>
 
-<!-- FLOAT BOOK -->
-<button class="float-book" id="floatBook">
-  <div class="float-dot"></div>
-  <span>Book Now</span>
+<!-- SCROLL TO TOP -->
+<button class="float-book" id="floatTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lb">
   <button class="lb-close" id="lbClose">&#x2715;</button>
+  <button class="lb-prev" id="lbPrev">&#8249;</button>
   <img class="lb-img" id="lbImg" src="" alt="">
+  <button class="lb-next" id="lbNext">&#8250;</button>
 </div>
 
 <!-- BOOKING MODAL -->
@@ -1028,7 +1033,7 @@ setTimeout(function(){
     <div>
       <div class="tag">Get In Touch</div>
       <h2 class="display">Contact<br><em>Us</em></h2>
-      <p style="font-size:.76rem;line-height:1.85;color:rgba(255,255,255,.44);margin-top:12px">Ready for your next flawless install? Fill out the form and we'll confirm your appointment.</p>
+      <p style="font-size:.76rem;line-height:1.85;color:rgba(255,255,255,.44);margin-top:12px">Have a question? We'd love to hear from you. Fill out the form and we'll get back to you as soon as possible.</p>
       <div class="contact-info">
         <div class="c-row"><div class="c-ico">&#9993;</div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31585f575e71575d50465d54424246585642454455585e1f525e5c">[email&#160;protected]</a></div>
         <div class="c-row"><div class="c-ico">&#9742;</div>(877) 297-5454</div>
@@ -1038,17 +1043,7 @@ setTimeout(function(){
     <div class="contact-form">
       <div class="field"><label>Your Name</label><input type="text" placeholder="e.g. Jasmine Smith" autocomplete="name"></div>
       <div class="field"><label>Email</label><input type="email" placeholder="you@email.com" autocomplete="email"></div>
-      <div class="field">
-        <label>Service</label>
-        <select>
-          <option value="" disabled selected>Select a service</option>
-          <option>Frontal Wig Install — $170</option>
-          <option>Closure Install — $150</option>
-          <option>Wig Revamp — $190</option>
-          <option>Custom Styling</option>
-        </select>
-      </div>
-      <div class="field"><label>Message</label><textarea placeholder="Tell us about the look you want..."></textarea></div>
+      <div class="field"><label>Your Question</label><textarea placeholder="What would you like to know?" style="min-height:140px"></textarea></div>
       <button class="btn btn-pink" style="align-self:flex-start;">Send Message</button>
     </div>
   </div>
@@ -1146,9 +1141,10 @@ document.getElementById('footerSubscribe').addEventListener('click',function(){
     setTimeout(function(){ btn.textContent='Subscribe'; },3000);
   });
 });
-var floatBook=document.getElementById('floatBook');
-window.addEventListener('scroll',function(){ floatBook.classList.toggle('visible',window.scrollY>400); });
-floatBook.addEventListener('click',function(){ openBooking('General'); });
+/* ── SCROLL TO TOP ── */
+var floatTop=document.getElementById('floatTop');
+window.addEventListener('scroll',function(){ floatTop.classList.toggle('visible',window.scrollY>400); });
+floatTop.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
 
 /* ── PROMO BANNER ── */
 document.getElementById('promoX').addEventListener('click',function(){
@@ -1289,12 +1285,42 @@ startAuto();
 
 /* ── GALLERY LIGHTBOX ── */
 var lb=document.getElementById('lb');
+/* ── LIGHTBOX ── */
+var lb=document.getElementById('lb');
 var lbImg=document.getElementById('lbImg');
-document.querySelectorAll('.gal-item').forEach(function(item){
-  item.addEventListener('click',function(){ lbImg.src=item.dataset.src; lb.classList.add('open'); document.body.style.overflow='hidden'; });
+var galItems=Array.from(document.querySelectorAll('.gal-item'));
+var lbIndex=0;
+function openLb(idx){
+  lbIndex=idx;
+  lbImg.src=galItems[lbIndex].dataset.src;
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+function lbNavigate(dir){
+  lbIndex=(lbIndex+dir+galItems.length)%galItems.length;
+  lbImg.style.opacity='0';
+  lbImg.style.transform='scale(.92)';
+  setTimeout(function(){
+    lbImg.src=galItems[lbIndex].dataset.src;
+    lbImg.style.opacity='1';
+    lbImg.style.transform='scale(1)';
+  },150);
+}
+lbImg.style.transition='opacity .2s,transform .2s';
+galItems.forEach(function(item,i){
+  item.addEventListener('click',function(){ openLb(i); });
 });
-document.getElementById('lbClose').addEventListener('click',function(){ lb.classList.remove('open'); document.body.style.overflow=''; });
-lb.addEventListener('click',function(e){ if(e.target===lb){ lb.classList.remove('open'); document.body.style.overflow=''; } });
+document.getElementById('lbClose').addEventListener('click',closeLb);
+document.getElementById('lbPrev').addEventListener('click',function(e){ e.stopPropagation(); lbNavigate(-1); });
+document.getElementById('lbNext').addEventListener('click',function(e){ e.stopPropagation(); lbNavigate(1); });
+lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+document.addEventListener('keydown',function(e){
+  if(!lb.classList.contains('open')) return;
+  if(e.key==='ArrowLeft') lbNavigate(-1);
+  if(e.key==='ArrowRight') lbNavigate(1);
+  if(e.key==='Escape') closeLb();
+});
 
 /* ── CUSTOM CURSOR ── */
 if(window.matchMedia('(pointer:fine)').matches){
