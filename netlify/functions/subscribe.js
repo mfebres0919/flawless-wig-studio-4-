@@ -16,7 +16,7 @@ exports.handler = async (event) => {
     const segRes = await fetch('https://api.flodesk.com/v1/subscribers/' + email + '/segments', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': auth },
-      body: JSON.stringify({ segment_ids: ['69a48f6febf332bb71733711'] })
+      body: JSON.stringify({ segment_ids: ['69a47ff7b7ecbac76b2582db'] })
     });
     const segData = await segRes.json();
 
