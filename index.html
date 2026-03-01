@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flawless Wig Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════
+   RESET & ROOT
+═══════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+a{text-decoration:none;color:inherit}
+
+:root{
+  --pink:#E8A0B0;
+  --pink-lt:#F5C8D3;
+  --pink-dk:#C4607A;
+  --pink-deep:#9B3A52;
+  --black:#0A0A0A;
+  --black2:#111111;
+  --black3:#181818;
+  --black4:#222222;
+  --white:#FFFFFF;
+  --off-white:#F9F5F6;
+  --pad:clamp(16px,5vw,80px);
+  --banner-h:38px;
+  --nav-h:62px;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--black);
+  color:var(--white);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ═══════════════════════
+   LOADER
+═══════════════════════ */
+#pageLoader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--black);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  transition:opacity .7s ease,visibility .7s ease;
+}
+#pageLoader.done{opacity:0;visibility:hidden;pointer-events:none}
+.loader-logo{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,5vw,2.5rem);
+  font-weight:400;letter-spacing:.16em;color:var(--pink-lt);
+}
+.loader-logo em{font-style:italic;color:var(--pink)}
+.loader-bar-wrap{width:100px;height:1px;background:rgba(232,160,176,.15);overflow:hidden;border-radius:2px}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--pink-dk),var(--pink-lt));animation:fillBar 1.4s ease forwards}
+@keyframes fillBar{from{width:0}to{width:100%}}
+
+/* ═══════════════════════
+   UTILITIES
+═══════════════════════ */
+.tag{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--pink);font-weight:600;margin-bottom:10px;
+}
+.tag::before{content:'';width:16px;height:1px;background:var(--pink);flex-shrink:0}
+
+.display{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.9rem,5.5vw,3.6rem);
+  font-weight:400;line-height:1.1;
+}
+.display em{font-style:italic;color:var(--pink)}
+.display.on-light{color:var(--black)}
+.display.on-light em{color:var(--pink-dk)}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 26px;border-radius:100px;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;transition:transform .25s,box-shadow .25s;
+  white-space:nowrap;cursor:pointer;border:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-pink{
+  background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));
+  color:var(--white);
+  box-shadow:0 4px 20px rgba(196,96,122,.4);
+}
+.btn-pink:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(196,96,122,.55)}
+.btn-white{background:var(--white);color:var(--black);box-shadow:0 4px 14px rgba(255,255,255,.12)}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,255,255,.2)}
+.btn-outline{border:1.5px solid rgba(255,255,255,.28);color:var(--white);background:transparent}
+.btn-outline:hover{border-color:var(--pink);color:var(--pink-lt)}
+.btn-outline-dark{border:1.5px solid rgba(0,0,0,.18);color:var(--black);background:transparent}
+.btn-outline-dark:hover{border-color:var(--pink-dk);color:var(--pink-dk)}
+
+/* ═══════════════════════
+   PROMO BANNER
+═══════════════════════ */
+.promo-banner{
+  position:fixed;top:0;left:0;right:0;z-index:210;
+  background:linear-gradient(90deg,var(--pink-deep),var(--pink-dk),var(--pink),var(--pink-dk),var(--pink-deep));
+  background-size:300% 100%;animation:shimmer 5s ease infinite;
+  padding:8px var(--pad);min-height:var(--banner-h);
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  transition:opacity .4s,visibility .4s;
+}
+.promo-banner.hidden{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.promo-text{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--white);text-align:center;line-height:1.6}
+.promo-text strong{color:var(--black);background:rgba(255,255,255,.92);padding:1px 8px;border-radius:100px;margin:0 2px;font-weight:700}
+.promo-cta{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--black);background:var(--white);border-radius:100px;padding:4px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s}
+.promo-cta:hover{background:var(--off-white)}
+.promo-x{background:none;border:none;color:rgba(255,255,255,.75);font-size:.88rem;cursor:pointer;padding:2px 5px;flex-shrink:0}
+.promo-x:hover{color:var(--white)}
+
+/* ═══════════════════════
+   NAV
+═══════════════════════ */
+nav{
+  position:fixed;left:0;right:0;z-index:200;
+  top:var(--banner-h);
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--pad);gap:14px;
+  background:rgba(10,10,10,.88);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(232,160,176,.09);
+  transition:background .4s,top .4s;
+}
+nav.solid{background:rgba(10,10,10,.98)}
+nav.banner-gone{top:0}
+.nav-logo{font-family:'Playfair Display',serif;font-size:clamp(.9rem,3vw,1.3rem);font-weight:400;letter-spacing:.12em;color:var(--white);white-space:nowrap;flex-shrink:0}
+.nav-logo em{font-style:italic;color:var(--pink)}
+.nav-links{display:none;list-style:none;gap:clamp(14px,2.2vw,34px);align-items:center}
+.nav-links a{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.52);position:relative;transition:color .25s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--pink);transform:scaleX(0);transition:transform .3s;transform-origin:right}
+.nav-links a:hover{color:var(--pink-lt)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+.nav-book{display:none}
+.ham{display:flex;flex-direction:column;gap:5px;width:22px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.ham span{display:block;height:1.5px;background:var(--white);border-radius:2px;transition:transform .3s,opacity .3s}
+.ham span:nth-child(2){width:70%}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-menu{
+  position:fixed;inset:0;z-index:199;background:var(--black2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  transform:translateX(100%);transition:transform .45s cubic-bezier(.4,0,.2,1);
+}
+.mob-menu.open{transform:translateX(0)}
+.mob-menu a{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,7vw,2.7rem);font-weight:400;color:rgba(255,255,255,.68);transition:color .25s;-webkit-tap-highlight-color:transparent}
+.mob-menu a:hover{color:var(--pink-lt)}
+@media(min-width:860px){.nav-links{display:flex}.nav-book{display:flex}.ham{display:none}}
+
+/* ═══════════════════════
+   HERO
+═══════════════════════ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;animation:zoomIn 1.6s ease forwards}
+@keyframes zoomIn{from{transform:scale(1.07)}to{transform:scale(1)}}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.98) 0%,rgba(10,10,10,.6) 36%,rgba(10,10,10,.18) 65%,transparent 100%)}
+@media(min-width:700px){
+  .hero-veil{background:linear-gradient(105deg,rgba(10,10,10,.97) 0%,rgba(10,10,10,.72) 44%,transparent 68%),linear-gradient(to top,rgba(10,10,10,.65) 0%,transparent 50%)}
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:calc(var(--banner-h) + var(--nav-h) + 20px) var(--pad) clamp(36px,8vw,80px);
+  width:100%;max-width:min(640px,100%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(232,160,176,.1);border:1px solid rgba(232,160,176,.26);
+  border-radius:100px;padding:5px 13px;
+  font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--pink-lt);margin-bottom:16px;
+}
+.badge-dot{width:5px;height:5px;background:var(--pink);border-radius:50%;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(1.6)}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.3rem,8vw,5rem);font-weight:500;line-height:1.05;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--pink);display:block}
+.hero p{font-size:clamp(.77rem,2vw,.87rem);line-height:1.9;color:rgba(255,255,255,.52);max-width:360px;margin-bottom:24px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:11px}
+.hero-stats{display:flex;gap:clamp(16px,5vw,48px);margin-top:32px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08)}
+.stat-n{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4vw,2.3rem);font-weight:400;color:var(--pink-lt);line-height:1}
+.stat-l{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.34);margin-top:4px}
+
+/* ═══════════════════════
+   TICKER
+═══════════════════════ */
+.ticker{background:var(--pink-dk);overflow:hidden;padding:9px 0;white-space:nowrap}
+.ticker-track{display:inline-flex;animation:tick 22s linear infinite}
+.ticker-track span{font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;color:var(--white);padding:0 24px}
+.ticker-track .sep{color:rgba(255,255,255,.38);font-size:.78rem;vertical-align:middle}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══════════════════════
+   SERVICES
+═══════════════════════ */
+.services{background:var(--off-white);padding:clamp(48px,10vw,120px) var(--pad)}
+.svc-head{display:flex;flex-direction:column;gap:16px;margin-bottom:clamp(28px,5vw,52px)}
+.svc-head-sub{font-size:.78rem;line-height:1.8;color:rgba(10,10,10,.48);max-width:270px}
+@media(min-width:600px){.svc-head{flex-direction:row;justify-content:space-between;align-items:flex-end}}
+.svc-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:500px){.svc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:860px){.svc-grid{grid-template-columns:repeat(3,1fr)}}
+.svc-card{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/4;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media(min-width:500px) and (max-width:859px){.svc-card:last-child{grid-column:1/-1;aspect-ratio:unset;height:420px}}
+@media(min-width:860px){.svc-card{aspect-ratio:unset;height:490px}}
+.svc-card img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.svc-card:hover img{transform:scale(1.07)}
+.svc-veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95) 0%,rgba(10,10,10,.32) 55%,transparent 100%)}
+.svc-body{position:absolute;bottom:0;left:0;right:0;padding:20px 18px}
+.svc-num{font-size:.52rem;letter-spacing:.28em;color:var(--pink);margin-bottom:3px;font-weight:600}
+.svc-title{font-family:'Playfair Display',serif;font-size:clamp(1.15rem,2.8vw,1.6rem);font-weight:400;color:var(--white);line-height:1.2}
+.svc-price{font-size:.7rem;color:var(--pink-lt);margin-top:2px}
+.svc-book-btn{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:7px 16px;border-radius:100px;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;cursor:pointer;box-shadow:0 4px 14px rgba(196,96,122,.35);transition:transform .25s,box-shadow .25s;-webkit-tap-highlight-color:transparent}
+.svc-book-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(196,96,122,.5)}
+.svc-cta{text-align:center;margin-top:36px}
+
+/* ═══════════════════════
+   WAITLIST STRIP
+═══════════════════════ */
+.wl-strip{background:var(--black2);border-top:1px solid rgba(232,160,176,.07);padding:18px var(--pad);display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center}
+.wl-strip p{font-size:.76rem;color:rgba(255,255,255,.45)}
+.wl-strip p strong{color:var(--pink-lt)}
+.wl-strip-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:transparent;border:1.5px solid rgba(232,160,176,.32);color:var(--pink-lt);cursor:pointer;transition:all .25s;font-family:'DM Sans',sans-serif}
+.wl-strip-btn:hover{background:rgba(232,160,176,.08);border-color:var(--pink)}
+
+/* ═══════════════════════
+   SPECIALS
+═══════════════════════ */
+.specials{position:relative;overflow:hidden;padding:clamp(48px,10vw,100px) var(--pad)}
+.specials-bg{position:absolute;inset:0;background-image:url('salon.png');background-size:cover;background-position:center}
+.specials-overlay{position:absolute;inset:0;background:rgba(10,10,10,.82)}
+.specials-inner{position:relative;z-index:1}
+.specials-grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:clamp(24px,5vw,44px)}
+@media(min-width:560px){.specials-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.specials-grid{grid-template-columns:repeat(3,1fr)}}
+.deal-card{background:rgba(255,255,255,.03);border:1px solid rgba(232,160,176,.1);border-radius:16px;padding:24px 20px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.deal-card:hover{border-color:rgba(232,160,176,.32);transform:translateY(-4px)}
+.deal-card::before{content:'';position:absolute;top:-36px;right:-36px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,176,.07) 0%,transparent 70%);pointer-events:none}
+.deal-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:12px}
+.deal-title{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,2.8vw,1.35rem);font-weight:400;color:var(--white);margin-bottom:6px;line-height:1.2}
+.deal-desc{font-size:.74rem;color:rgba(255,255,255,.42);line-height:1.75;margin-bottom:14px}
+.deal-price{display:flex;align-items:baseline;gap:9px;margin-bottom:14px}
+.deal-new{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;color:var(--pink-lt)}
+.deal-old{font-size:.74rem;color:rgba(255,255,255,.26);text-decoration:line-through}
+.deal-expires{font-size:.56rem;letter-spacing:.14em;color:rgba(255,255,255,.26);margin-top:10px;text-transform:uppercase}
+
+/* ═══════════════════════
+   GALLERY
+═══════════════════════ */
+.gallery{background:var(--black2);padding:clamp(48px,10vw,120px) var(--pad)}
+.gal-head{margin-bottom:clamp(24px,5vw,48px)}
+.gal-grid{display:grid;gap:8px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:560px){.gal-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){
+  .gal-grid{
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(4,320px);
+  }
+  .gal-item:nth-child(n+9){display:block}
+  /* Row 1: tall | normal | normal | tall */
+  .gal-item:nth-child(1){grid-column:1;    grid-row:1/3}  /* tall */
+  .gal-item:nth-child(2){grid-column:2;    grid-row:1}
+  .gal-item:nth-child(3){grid-column:3;    grid-row:1}
+  .gal-item:nth-child(4){grid-column:4;    grid-row:1/3}  /* tall */
+  /* Row 2: (talls continue) | wide filling cols 2-3 | (tall continues) */
+  .gal-item:nth-child(5){grid-column:2/4;  grid-row:2}    /* wide */
+  /* Row 3: wide cols 1-2 | normal | normal */
+  .gal-item:nth-child(6){grid-column:1/3;  grid-row:3}    /* wide */
+  .gal-item:nth-child(7){grid-column:3;    grid-row:3}
+  .gal-item:nth-child(8){grid-column:4;    grid-row:3}
+  /* Row 4: wide cols 1-2 | wide cols 3-4 */
+  .gal-item:nth-child(9){grid-column:1/3;  grid-row:4}    /* wide */
+  .gal-item:nth-child(10){grid-column:3/5; grid-row:4}    /* wide */
+}
+.gal-item{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:3/4;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media(min-width:900px){.gal-item{aspect-ratio:unset;height:100%}}
+.gal-item img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.gal-item:hover img{transform:scale(1.08)}
+.gal-veil{position:absolute;inset:0;background:rgba(10,10,10,0);display:flex;align-items:center;justify-content:center;transition:background .35s}
+.gal-item:hover .gal-veil{background:rgba(10,10,10,.4)}
+.gal-plus{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--pink-lt);opacity:0;transform:scale(.7);transition:opacity .35s,transform .35s}
+.gal-item:hover .gal-plus{opacity:1;transform:scale(1)}
+
+/* ═══════════════════════
+   CTA — PHOTO BACKGROUND
+═══════════════════════ */
+.cta-wrap{padding:0 var(--pad) clamp(48px,10vw,100px);background:var(--black2)}
+.cta-box{
+  position:relative;overflow:hidden;border-radius:20px;
+  min-height:clamp(240px,42vw,420px);
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  padding:clamp(28px,7vw,64px) clamp(20px,6vw,64px);gap:18px;
+}
+@media(min-width:680px){.cta-box{flex-direction:row;align-items:center;justify-content:space-between}}
+.cta-photo{position:absolute;inset:0;background-image:url('img5.jpeg');background-size:cover;background-position:top center}
+.cta-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(10,10,10,.94) 0%,rgba(10,10,10,.8) 46%,rgba(10,10,10,.46) 100%)}
+.cta-content{position:relative;z-index:1}
+.cta-box h2{font-family:'Playfair Display',serif;font-size:clamp(1.55rem,5vw,2.8rem);font-weight:500;line-height:1.15}
+.cta-box h2 em{font-style:italic;color:var(--pink)}
+.cta-box p{font-size:.78rem;color:rgba(255,255,255,.48);line-height:1.8;margin-top:8px;max-width:310px}
+.cta-btn-wrap{flex-shrink:0;position:relative;z-index:1}
+
+/* ═══════════════════════
+   TESTIMONIALS
+═══════════════════════ */
+.testimonials{background:var(--black);padding:clamp(48px,10vw,120px) var(--pad);position:relative;overflow:hidden}
+/* ── FLOATING BUBBLES ── */
+.test-bubbles{position:absolute;inset:0;z-index:0;pointer-events:none}
+.test-bubbles .bubble{
+  position:absolute;display:block;border-radius:999px;
+  background:transparent;
+  border:1.5px solid rgba(232,160,176,.45);
+  box-shadow:0 0 18px rgba(232,160,176,.3),0 0 45px rgba(196,96,122,.2),0 0 90px rgba(155,58,82,.12);
+  outline:1px solid rgba(196,96,122,.22);outline-offset:-8px;
+  animation:bubbleFloat 10s ease-in-out infinite;will-change:transform;
+}
+.test-bubbles .b1{width:220px;height:220px;left:80px;top:20%;animation-duration:12s}
+.test-bubbles .b2{width:130px;height:130px;left:120px;top:68%;animation-duration:9s;animation-delay:-2s}
+.test-bubbles .b3{width:250px;height:250px;right:80px;top:42%;animation-duration:13s;animation-delay:-3s}
+.test-bubbles .b4{width:155px;height:155px;right:100px;top:78%;animation-duration:10s;animation-delay:-1s}
+.test-bubbles .b5{width:90px;height:90px;left:50%;top:10%;animation-duration:11s;animation-delay:-4s}
+@keyframes bubbleFloat{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(18px,-26px,0) scale(1.04)}
+  100%{transform:translate3d(0,0,0) scale(1)}
+}
+@media(max-width:600px){
+  .test-bubbles .b1{width:170px;height:170px;left:-95px}
+  .test-bubbles .b3{width:190px;height:190px;right:-100px}
+  .test-bubbles .b2{width:110px;height:110px;left:-65px}
+  .test-bubbles .b4{width:125px;height:125px;right:-75px}
+  .test-bubbles .b5{display:none}
+}
+@media(min-width:2000px){
+  .test-bubbles .b1{left:380px}.test-bubbles .b2{left:430px}
+  .test-bubbles .b3{right:360px}.test-bubbles .b4{right:420px}
+}
+@media(prefers-reduced-motion:reduce){.test-bubbles .bubble{animation:none}}
+.test-head{margin-bottom:clamp(24px,5vw,48px);position:relative;z-index:1}
+.test-wrap{overflow:hidden;position:relative;z-index:1}
+.test-track{display:flex;gap:14px;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.t-card{flex:0 0 100%;background:rgba(255,255,255,.025);border:1px solid rgba(232,160,176,.08);border-radius:16px;padding:clamp(18px,5vw,34px);position:relative}
+@media(min-width:680px){.t-card{flex:0 0 calc(50% - 7px)}}
+.t-quote{font-family:'Playfair Display',serif;font-size:4.5rem;color:var(--pink);opacity:.12;position:absolute;top:4px;left:14px;line-height:1;pointer-events:none}
+.t-stars{color:var(--pink);font-size:.75rem;letter-spacing:3px;margin-bottom:11px}
+.t-text{font-size:.78rem;line-height:1.9;color:rgba(255,255,255,.58);margin-bottom:18px;position:relative;z-index:1}
+.t-author{display:flex;align-items:center;gap:11px}
+.t-img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--pink);flex-shrink:0}
+.t-name{font-size:.72rem;font-weight:600;color:var(--pink-lt)}
+.t-role{font-size:.56rem;color:rgba(255,255,255,.32);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+.test-controls{display:flex;align-items:center;gap:9px;margin-top:22px;position:relative;z-index:1}
+.t-btn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.13);background:transparent;color:var(--white);font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .25s,background .25s,color .25s;-webkit-tap-highlight-color:transparent}
+.t-btn:hover,.t-btn.lit{border-color:var(--pink);background:rgba(232,160,176,.09);color:var(--pink)}
+.t-dots{display:flex;gap:5px;align-items:center;margin-left:4px}
+.t-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.16);transition:background .3s,transform .3s;cursor:pointer}
+.t-dot.active{background:var(--pink);transform:scale(1.35)}
+.reviews-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1}
+.g-row{display:flex;align-items:center;gap:11px}
+.g-logo{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;font-family:serif;color:var(--white);flex-shrink:0;background:linear-gradient(135deg,#4285F4 0%,#34A853 40%,#FBBC05 70%,#EA4335 100%)}
+.g-stars{color:#FBBC05;font-size:.75rem;letter-spacing:2px}
+.g-label{font-size:.56rem;color:rgba(255,255,255,.34);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.review-links{display:flex;gap:8px;flex-wrap:wrap}
+.rev-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:100px;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;transition:transform .25s,box-shadow .25s;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:none}
+.rev-btn.read{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.62)}
+.rev-btn.read:hover{border-color:var(--pink);color:var(--pink-lt)}
+.rev-btn.write{background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);box-shadow:0 4px 14px rgba(196,96,122,.28)}
+.rev-btn.write:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(196,96,122,.44)}
+
+/* ═══════════════════════
+   FAQ — PHOTO BACKGROUND
+═══════════════════════ */
+.faq-section{position:relative;overflow:hidden;padding:clamp(48px,10vw,120px) var(--pad)}
+.faq-photo{position:absolute;inset:0;background-image:url('img3.jpeg');background-size:cover;background-position:center top}
+.faq-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(10,10,10,.97) 0%,rgba(10,10,10,.92) 50%,rgba(10,10,10,.7) 100%)}
+@media(min-width:900px){.faq-overlay{background:rgba(10,10,10,.82)}}
+.faq-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+@media(min-width:900px){.faq-inner{max-width:820px;margin:0 auto}}
+.faq-list{display:flex;flex-direction:column;margin-top:clamp(24px,5vw,44px)}
+.faq-item{border-bottom:1px solid rgba(232,160,176,.1)}
+.faq-item:first-child{border-top:1px solid rgba(232,160,176,.1)}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:17px 0;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.faq-q-text{font-family:'Playfair Display',serif;font-size:clamp(.88rem,2.4vw,1.04rem);font-weight:400;color:var(--white);line-height:1.4;transition:color .25s}
+.faq-q:hover .faq-q-text{color:var(--pink-lt)}
+.faq-icon{width:26px;height:26px;border-radius:50%;flex-shrink:0;border:1px solid rgba(232,160,176,.22);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--pink);transition:transform .35s,background .25s,border-color .25s}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:rgba(232,160,176,.1);border-color:var(--pink)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1),padding .4s}
+.faq-item.open .faq-a{max-height:260px;padding-bottom:16px}
+.faq-a p{font-size:.78rem;line-height:1.85;color:rgba(255,255,255,.5);padding-right:40px}
+
+/* ═══════════════════════
+   CONTACT
+═══════════════════════ */
+.contact{background:linear-gradient(160deg,var(--black3) 0%,var(--black) 100%);padding:clamp(48px,10vw,120px) var(--pad)}
+.contact-grid{display:grid;grid-template-columns:1fr;gap:clamp(32px,7vw,80px)}
+@media(min-width:780px){.contact-grid{grid-template-columns:1fr 1fr;max-width:960px;margin:0 auto}}
+@media(min-width:1200px){.contact-grid{max-width:1100px}}
+.contact-info{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.c-row{display:flex;align-items:center;gap:11px;font-size:.76rem;color:rgba(255,255,255,.52)}
+.c-ico{width:32px;height:32px;border-radius:50%;border:1px solid rgba(232,160,176,.26);display:flex;align-items:center;justify-content:center;font-size:.74rem;color:var(--pink);flex-shrink:0}
+.contact-form{display:flex;flex-direction:column;gap:14px}
+.field label{display:block;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pink);margin-bottom:5px;font-weight:600}
+.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:12px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;transition:border-color .25s,background .25s;-webkit-appearance:none;appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23E8A0B0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer}
+.field select option{background:var(--black3);color:var(--white)}
+.field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.2)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink);background:rgba(232,160,176,.04)}
+.field textarea{resize:none;height:108px}
+
+/* ═══════════════════════
+   POLICIES
+═══════════════════════ */
+.policies{background:var(--off-white);padding:clamp(48px,10vw,100px) var(--pad)}
+.pol-inner{display:grid;grid-template-columns:1fr;gap:28px;background:var(--white);border-radius:20px;padding:clamp(22px,6vw,50px);box-shadow:0 16px 54px rgba(0,0,0,.06)}
+@media(min-width:660px){.pol-inner{grid-template-columns:1fr 1.4fr;gap:44px;max-width:960px;margin:0 auto}}
+@media(min-width:1200px){.pol-inner{max-width:1100px}}
+.pol-img{border-radius:14px;overflow:hidden;aspect-ratio:4/5}
+.pol-img img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pol-list{display:flex;flex-direction:column;gap:11px;margin:18px 0 26px}
+.pol-item{display:flex;align-items:flex-start;gap:9px;font-size:.76rem;color:rgba(10,10,10,.62);line-height:1.65}
+.pol-check{width:17px;height:17px;border-radius:50%;flex-shrink:0;margin-top:2px;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));display:flex;align-items:center;justify-content:center;font-size:.48rem;color:var(--white)}
+
+/* ═══════════════════════
+   FOOTER
+═══════════════════════ */
+footer{background:var(--black2);padding:clamp(36px,8vw,76px) var(--pad) clamp(18px,4vw,34px);border-top:1px solid rgba(232,160,176,.09)}
+.foot-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px 14px;margin-bottom:36px}
+@media(min-width:660px){.foot-grid{grid-template-columns:1.5fr repeat(3,1fr)}}
+.foot-brand{grid-column:1/-1}
+@media(min-width:660px){.foot-brand{grid-column:auto}}
+.foot-logo{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;letter-spacing:.12em;color:var(--white);display:block;margin-bottom:10px}
+.foot-logo em{font-style:italic;color:var(--pink)}
+.foot-desc{font-size:.72rem;line-height:1.85;color:rgba(255,255,255,.3);max-width:200px;margin-bottom:18px}
+.newsletter{display:flex;border-radius:100px;overflow:hidden;border:1px solid rgba(255,255,255,.09)}
+.newsletter input{flex:1;min-width:0;background:transparent;border:none;padding:8px 13px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.7rem;outline:none}
+.newsletter input::placeholder{color:rgba(255,255,255,.2)}
+.newsletter button{background:var(--pink-dk);border:none;padding:8px 14px;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .25s}
+.newsletter button:hover{background:var(--pink)}
+.foot-col h4{font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:12px}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.foot-col ul a{font-size:.72rem;color:rgba(255,255,255,.32);transition:color .25s}
+.foot-col ul a:hover{color:var(--pink-lt)}
+.foot-bottom{display:flex;flex-direction:column;gap:12px;padding-top:24px;border-top:1px solid rgba(255,255,255,.05)}
+@media(min-width:560px){.foot-bottom{flex-direction:row;justify-content:space-between;align-items:center}}
+.foot-copy{font-size:.58rem;color:rgba(255,255,255,.2)}
+.socials{display:flex;gap:7px}
+.soc-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;font-size:.64rem;color:rgba(255,255,255,.36);transition:border-color .25s,color .25s;-webkit-tap-highlight-color:transparent}
+.soc-btn:hover{border-color:var(--pink);color:var(--pink)}
+
+/* ═══════════════════════
+   LIGHTBOX
+═══════════════════════ */
+.lightbox{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;padding:20px}
+.lightbox.open{opacity:1;pointer-events:all}
+.lb-img{max-width:min(88vw,560px);max-height:86vh;border-radius:12px;object-fit:contain;transform:scale(.92);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.lightbox.open .lb-img{transform:scale(1)}
+.lb-close{position:absolute;top:16px;right:20px;font-size:1.4rem;color:rgba(255,255,255,.42);cursor:pointer;line-height:1;transition:color .25s;background:none;border:none;-webkit-tap-highlight-color:transparent}
+.lb-close:hover{color:var(--pink)}
+
+/* ═══════════════════════
+   BOOKING MODAL
+═══════════════════════ */
+.bm-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(4,2,2,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .35s}
+.bm-overlay.open{opacity:1;pointer-events:all}
+.bm-panel{position:relative;width:100%;max-width:840px;height:min(88vh,680px);background:var(--black2);border-radius:22px;border:1px solid rgba(232,160,176,.16);box-shadow:0 32px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;overflow:hidden;transform:translateY(28px) scale(.97);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.bm-overlay.open .bm-panel{transform:translateY(0) scale(1)}
+.bm-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(232,160,176,.09);flex-shrink:0;gap:11px;background:rgba(10,10,10,.5)}
+.bm-header-left{display:flex;align-items:center;gap:9px}
+.bm-dot{width:7px;height:7px;border-radius:50%;background:var(--pink);animation:blink 2s ease infinite}
+.bm-title{font-family:'Playfair Display',serif;font-size:clamp(.88rem,2.5vw,1.12rem);font-weight:400;letter-spacing:.08em;color:var(--pink-lt)}
+.bm-svc-tag{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);background:rgba(232,160,176,.07);border:1px solid rgba(232,160,176,.16);border-radius:100px;padding:3px 11px;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.bm-close{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.42);font-size:.82rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.bm-close:hover{border-color:var(--pink);color:var(--pink);background:rgba(232,160,176,.08)}
+.bm-body{flex:1;position:relative;overflow:hidden}
+.bm-body iframe{width:100%;height:100%;border:none;display:block}
+.bm-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--black2);transition:opacity .4s}
+.bm-loader.gone{opacity:0;pointer-events:none}
+.bm-spinner{width:32px;height:32px;border-radius:50%;border:2px solid rgba(232,160,176,.12);border-top-color:var(--pink);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bm-loader p{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.bm-foot{padding:8px 18px;border-top:1px solid rgba(232,160,176,.06);display:flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;background:rgba(10,10,10,.3)}
+.bm-foot p{font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.18);text-align:center}
+.bm-foot span{color:var(--pink);font-size:.56rem}
+
+/* ═══════════════════════
+   EMAIL POPUP
+═══════════════════════ */
+.email-popup{position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,2,3,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.email-popup.show{opacity:1;visibility:visible}
+.ep-card{position:relative;width:100%;max-width:500px;background:var(--black2);border-radius:22px;border:1px solid rgba(232,160,176,.16);box-shadow:0 32px 80px rgba(0,0,0,.7);overflow:hidden;transform:translateY(28px) scale(.96);transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.email-popup.show .ep-card{transform:translateY(0) scale(1)}
+.ep-img{position:relative;height:500px;overflow:hidden}
+.ep-img img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.ep-img-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--black2) 0%,rgba(17,11,13,.35) 60%,transparent 100%)}
+.ep-badge{position:absolute;top:13px;left:13px;background:var(--pink-dk);color:var(--white);font-size:.5rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;padding:4px 11px;border-radius:100px}
+.ep-x{position:absolute;top:11px;right:11px;width:26px;height:26px;border-radius:50%;background:rgba(10,10,10,.6);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.42);font-size:.78rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;z-index:1}
+.ep-x:hover{border-color:var(--pink);color:var(--pink)}
+.ep-body{padding:22px 26px 28px}
+.ep-tag{font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:7px}
+.ep-title{font-family:'Playfair Display',serif;font-size:clamp(1.45rem,4vw,2rem);font-weight:400;line-height:1.15;margin-bottom:8px}
+.ep-title em{font-style:italic;color:var(--pink)}
+.ep-desc{font-size:.76rem;line-height:1.8;color:rgba(255,255,255,.44);margin-bottom:18px}
+.ep-form{display:flex;gap:8px;flex-wrap:wrap}
+.ep-input{flex:1;min-width:160px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:10px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;transition:border-color .25s}
+.ep-input::placeholder{color:rgba(255,255,255,.25)}
+.ep-input:focus{border-color:var(--pink)}
+.ep-submit{background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;border-radius:100px;padding:10px 20px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;cursor:pointer;white-space:nowrap;transition:transform .25s,box-shadow .25s;box-shadow:0 4px 16px rgba(196,96,122,.35)}
+.ep-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,96,122,.5)}
+.ep-skip{display:block;text-align:center;margin-top:11px;font-size:.58rem;color:rgba(255,255,255,.25);cursor:pointer;letter-spacing:.1em;transition:color .25s}
+.ep-skip:hover{color:rgba(255,255,255,.52)}
+
+/* ═══════════════════════
+   FLOAT BOOK BUTTON
+═══════════════════════ */
+.float-book{position:fixed;bottom:22px;right:22px;z-index:190;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;border-radius:100px;padding:12px 20px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(196,96,122,.5);transition:transform .3s,box-shadow .3s,opacity .4s;opacity:0;pointer-events:none;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.float-book.visible{opacity:1;pointer-events:all}
+.float-book:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(196,96,122,.62)}
+.float-dot{width:6px;height:6px;border-radius:50%;background:var(--white);opacity:.8;animation:blink 2s ease infinite}
+@media(max-width:380px){.float-book span{display:none}.float-book{padding:13px 14px}}
+
+/* ═══════════════════════
+   WAITLIST MODAL
+═══════════════════════ */
+.wl-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,2,3,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.wl-overlay.open{opacity:1;visibility:visible}
+.wl-panel{width:100%;max-width:468px;background:var(--black2);border-radius:22px;border:1px solid rgba(232,160,176,.16);box-shadow:0 32px 80px rgba(0,0,0,.7);padding:30px 26px;position:relative;transform:translateY(22px) scale(.97);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.wl-overlay.open .wl-panel{transform:translateY(0) scale(1)}
+.wl-icon{width:46px;height:46px;border-radius:50%;background:rgba(232,160,176,.09);border:1px solid rgba(232,160,176,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:16px}
+.wl-title{font-family:'Playfair Display',serif;font-size:clamp(1.35rem,4vw,1.85rem);font-weight:400;line-height:1.2;margin-bottom:7px}
+.wl-title em{font-style:italic;color:var(--pink)}
+.wl-desc{font-size:.76rem;color:rgba(255,255,255,.43);line-height:1.8;margin-bottom:20px}
+.wl-fields{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.wl-input,.wl-select{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;transition:border-color .25s}
+.wl-input::placeholder{color:rgba(255,255,255,.22)}
+.wl-input:focus,.wl-select:focus{border-color:var(--pink)}
+.wl-select{-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23E8A0B0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
+.wl-select option{background:var(--black3)}
+.wl-submit{width:100%;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:var(--white);border:none;border-radius:10px;padding:13px;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(196,96,122,.33);transition:transform .25s,box-shadow .25s;font-family:'DM Sans',sans-serif}
+.wl-submit:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(196,96,122,.48)}
+.wl-note{font-size:.58rem;color:rgba(255,255,255,.22);text-align:center;margin-top:10px;line-height:1.6}
+.wl-close{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.36);font-size:.8rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s}
+.wl-close:hover{border-color:var(--pink);color:var(--pink)}
+
+/* ═══════════════════════
+   LARGE SCREENS
+═══════════════════════ */
+@media(min-width:1400px){
+  .hero-content{max-width:680px}
+  .specials-grid,.svc-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1800px){
+  :root{--pad:clamp(80px,8vw,140px)}
+  body{max-width:1800px;margin:0 auto;box-shadow:0 0 120px rgba(0,0,0,.5)}
+}
+</style>
+
+<!-- Isolated loader dismiss — safe from any body JS errors -->
+<script>
+setTimeout(function(){
+  var l=document.getElementById('pageLoader');
+  if(l){l.style.opacity='0';l.style.visibility='hidden';l.style.pointerEvents='none';}
+},1500);
+</script>
+</head>
+<body>
+
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <div class="loader-logo">Flawless<em>Wig</em> Studio</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- PROMO BANNER -->
+<div class="promo-banner" id="promoBanner">
+  <p class="promo-text">&#x2726; Limited Time &mdash; <strong>FLAWLESS10</strong> for 10% off your first install &#x2726;</p>
+  <span class="promo-cta" id="promoCta">Book Now</span>
+  <button class="promo-x" id="promoX">&#x2715;</button>
+</div>
+
+<!-- WAITLIST MODAL -->
+<div class="wl-overlay" id="wlOverlay">
+  <div class="wl-panel">
+    <button class="wl-close" id="wlClose">&#x2715;</button>
+    <div class="wl-icon">&#x23F0;</div>
+    <h2 class="wl-title">Join the<br><em>Waitlist</em></h2>
+    <p class="wl-desc">We're fully booked right now — but spots open often! Leave your info and we'll reach out the moment something opens up.</p>
+    <div class="wl-fields">
+      <input class="wl-input" type="text" id="wlName" placeholder="Your name">
+      <input class="wl-input" type="email" id="wlEmail" placeholder="Email address">
+      <input class="wl-input" type="tel" id="wlPhone" placeholder="Phone number (optional)">
+      <select class="wl-select" id="wlService">
+        <option value="" disabled selected>Which service are you interested in?</option>
+        <option>Frontal Wig Install — $170</option>
+        <option>Closure Install — $150</option>
+        <option>Wig Revamp — $190</option>
+        <option>Custom Styling</option>
+        <option>Any available</option>
+      </select>
+    </div>
+    <button class="wl-submit" id="wlSubmit">Join Waitlist</button>
+    <p class="wl-note">We'll notify you as soon as a spot opens. No spam, ever.</p>
+  </div>
+</div>
+
+<!-- EMAIL POPUP -->
+<div class="email-popup" id="emailPopup">
+  <div class="ep-card">
+    <button class="ep-x" id="epX">&#x2715;</button>
+    <div class="ep-img">
+      <img src="img2.jpeg" alt="Flawless install">
+      <div class="ep-img-veil"></div>
+      <div class="ep-badge">Members Only</div>
+    </div>
+    <div class="ep-body" id="epBody">
+      <div class="ep-tag">Join the VIP List</div>
+      <h2 class="ep-title">Get <em>10% Off</em><br>Your First Install</h2>
+      <p class="ep-desc">Sign up for exclusive early booking access, VIP offers, and style inspo straight to your inbox.</p>
+      <div class="ep-form">
+        <input class="ep-input" type="email" id="epEmail" placeholder="Enter your email...">
+        <button class="ep-submit" id="epSubmit">Claim Offer</button>
+      </div>
+      <span class="ep-skip" id="epSkip">No thanks, I'll pay full price</span>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden iframe for Google Form submission -->
+<iframe name="wlHiddenFrame" id="wlHiddenFrame" style="display:none"></iframe>
+
+<!-- FLOAT BOOK -->
+<button class="float-book" id="floatBook">
+  <div class="float-dot"></div>
+  <span>Book Now</span>
+</button>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lb">
+  <button class="lb-close" id="lbClose">&#x2715;</button>
+  <img class="lb-img" id="lbImg" src="" alt="">
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="bm-overlay" id="bmOverlay">
+  <div class="bm-panel">
+    <div class="bm-header">
+      <div class="bm-header-left">
+        <div class="bm-dot"></div>
+        <span class="bm-title">Flawless<em style="font-style:italic;color:var(--pink)">Wig</em> Studio</span>
+      </div>
+      <span class="bm-svc-tag" id="bmSvcTag">Book Appointment</span>
+      <button class="bm-close" id="bmClose">&#x2715;</button>
+    </div>
+    <div class="bm-body">
+      <div class="bm-loader" id="bmLoader"><div class="bm-spinner"></div><p>Loading your booking...</p></div>
+      <iframe id="bmFrame" src="" title="Book an appointment" allow="payment"></iframe>
+    </div>
+    <div class="bm-foot">
+      <span>&#x2726;</span>
+      <p>Secured booking &nbsp;&middot;&nbsp; $25 deposit required &nbsp;&middot;&nbsp; Powered by Acuity Scheduling</p>
+      <span>&#x2726;</span>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#services" class="mm-l">Services</a>
+  <a href="#gallery" class="mm-l">Gallery</a>
+  <a href="#testimonials" class="mm-l">Reviews</a>
+  <a href="#faq" class="mm-l">FAQ</a>
+  <a href="#contact" class="mm-l">Contact</a>
+  <button class="btn btn-pink" id="mobBookBtn">Book Now</button>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Flawless<em>Wig</em> Studio</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="btn btn-pink nav-book" id="navBook" style="padding:8px 18px;font-size:.56rem;">Book Now</button>
+  <div class="ham" id="ham"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <img class="hero-img" src="img4.jpeg" alt="Flawless wig install">
+  <div class="hero-veil"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="badge-dot"></span>Premium Wig Studio</div>
+    <h1>Flawless Wig Installs<em>Laid to Perfection</em></h1>
+    <p>Custom wig installs, seamless lace melts, and secure natural finishes. Every client leaves looking and feeling their absolute best.</p>
+    <div class="hero-btns">
+      <button class="btn btn-pink" id="heroBook">Book Now</button>
+      <a href="#gallery" class="btn btn-outline">View Gallery</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n">500+</div><div class="stat-l">Happy Clients</div></div>
+      <div><div class="stat-n">5&#9733;</div><div class="stat-l">Avg. Rating</div></div>
+      <div><div class="stat-n">4 Yrs</div><div class="stat-l">Experience</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Frontal Wig Install</span><span class="sep">&#x2726;</span>
+    <span>Lace Melt</span><span class="sep">&#x2726;</span>
+    <span>Closure Install</span><span class="sep">&#x2726;</span>
+    <span>Wig Revamp</span><span class="sep">&#x2726;</span>
+    <span>Custom Styling</span><span class="sep">&#x2726;</span>
+    <span>Body Wave</span><span class="sep">&#x2726;</span>
+    <span>Silk Press</span><span class="sep">&#x2726;</span>
+    <span>Frontal Wig Install</span><span class="sep">&#x2726;</span>
+    <span>Lace Melt</span><span class="sep">&#x2726;</span>
+    <span>Closure Install</span><span class="sep">&#x2726;</span>
+    <span>Wig Revamp</span><span class="sep">&#x2726;</span>
+    <span>Custom Styling</span><span class="sep">&#x2726;</span>
+    <span>Body Wave</span><span class="sep">&#x2726;</span>
+    <span>Silk Press</span><span class="sep">&#x2726;</span>
+  </div>
+</div>
+
+<!-- ═══ SERVICES ═══ -->
+<section class="services" id="services">
+  <div class="svc-head">
+    <div>
+      <div class="tag" style="color:var(--pink-dk)">What We Offer</div>
+      <h2 class="display on-light">Wig &amp; Install<br><em>Services</em></h2>
+    </div>
+    <p class="svc-head-sub">From seamless lace melts to full wig revamps — every service tailored perfectly to you.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card" id="svcCard1" tabindex="0">
+      <img src="img1.jpeg" alt="Frontal Wig Install">
+      <div class="svc-veil"></div>
+      <div class="svc-body">
+        <div class="svc-num">01</div>
+        <div class="svc-title">Frontal Wig Install</div>
+        <div class="svc-price">Starting at $170</div>
+        <button class="svc-book-btn" id="svcBtn1">Book Now &#x2197;</button>
+      </div>
+    </div>
+    <div class="svc-card" id="svcCard2" tabindex="0">
+      <img src="img6.jpeg" alt="Closure Install">
+      <div class="svc-veil"></div>
+      <div class="svc-body">
+        <div class="svc-num">02</div>
+        <div class="svc-title">Closure Install</div>
+        <div class="svc-price">Starting at $150</div>
+        <button class="svc-book-btn" id="svcBtn2">Book Now &#x2197;</button>
+      </div>
+    </div>
+    <div class="svc-card" id="svcCard3" tabindex="0">
+      <img src="img7.jpeg" alt="Wig Revamp">
+      <div class="svc-veil"></div>
+      <div class="svc-body">
+        <div class="svc-num">03</div>
+        <div class="svc-title">Wig Revamp</div>
+        <div class="svc-price">Starting at $190</div>
+        <button class="svc-book-btn" id="svcBtn3">Book Now &#x2197;</button>
+      </div>
+    </div>
+  </div>
+  <div class="svc-cta">
+    <button class="btn btn-outline-dark" id="svcCtaBtn">Book a Service</button>
+  </div>
+</section>
+
+<!-- WAITLIST STRIP -->
+<div class="wl-strip">
+  <p><strong>Fully booked?</strong> Don't miss out — get notified the moment a slot opens.</p>
+  <button class="wl-strip-btn" id="wlTrigger">&#x23F0; Join the Waitlist</button>
+</div>
+
+<!-- ═══ SPECIALS ═══ -->
+<section class="specials" id="specials">
+  <div class="specials-bg"></div>
+  <div class="specials-overlay"></div>
+  <div class="specials-inner">
+    <div>
+      <div class="tag">Limited Deals</div>
+      <h2 class="display">Current<br><em>Promotions</em></h2>
+    </div>
+  <div class="specials-grid">
+    <div class="deal-card">
+      <div class="deal-badge">&#x2726; New Clients</div>
+      <div class="deal-title">New Client Special</div>
+      <p class="deal-desc">First-time clients get an exclusive discount on any frontal or closure install. Book before spots run out!</p>
+      <div class="deal-price"><span class="deal-new">$145</span><span class="deal-old">$170</span></div>
+      <button class="btn btn-pink" id="dealBtn1" style="padding:8px 18px;font-size:.56rem;">Book This Deal</button>
+      <p class="deal-expires">Offer expires March 31, 2026</p>
+    </div>
+    <div class="deal-card">
+      <div class="deal-badge">&#x2726; Bundle &amp; Save</div>
+      <div class="deal-title">Install + Revamp Bundle</div>
+      <p class="deal-desc">Book a fresh install and a wig revamp together and save $40. Perfect for refreshing your whole collection.</p>
+      <div class="deal-price"><span class="deal-new">$320</span><span class="deal-old">$360</span></div>
+      <button class="btn btn-pink" id="dealBtn2" style="padding:8px 18px;font-size:.56rem;">Book This Deal</button>
+      <p class="deal-expires">While slots last</p>
+    </div>
+    <div class="deal-card">
+      <div class="deal-badge">&#x2726; Refer a Friend</div>
+      <div class="deal-title">Referral Discount</div>
+      <p class="deal-desc">Refer a friend who books an install and you both get $20 off your next appointment. Unlimited referrals!</p>
+      <div class="deal-price"><span class="deal-new">$20 off</span></div>
+      <button class="btn btn-pink" id="dealBtn3" style="padding:8px 18px;font-size:.56rem;">Claim Referral</button>
+      <p class="deal-expires">Ongoing promotion</p>
+    </div>
+  </div>
+  </div><!-- /specials-inner -->
+</section>
+
+<!-- ═══ GALLERY ═══ -->
+<section class="gallery" id="gallery">
+  <div class="gal-head">
+    <div class="tag">Portfolio</div>
+    <h2 class="display">Our<br><em>Gallery</em></h2>
+  </div>
+  <div class="gal-grid">
+    <!-- Row 1: tall + 2 normal + tall = 4 cols -->
+    <div class="gal-item gal-tall" data-src="img2.jpeg"><img src="img2.jpeg" alt="Gallery 1"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item" data-src="img3.jpeg"><img src="img3.jpeg" alt="Gallery 2"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item" data-src="img5.jpeg"><img src="img5.jpeg" alt="Gallery 3"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item gal-tall" data-src="img8.jpeg"><img src="img8.jpeg" alt="Gallery 4"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <!-- Row 2 (shares tall rows): 2 normal items fill middle cols -->
+    <div class="gal-item" data-src="img9.jpeg"><img src="img9.jpeg" alt="Gallery 5"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item" data-src="img10.jpeg"><img src="img10.jpeg" alt="Gallery 6"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <!-- Row 3: wide + normal + normal = 4 cols -->
+    <div class="gal-item gal-wide" data-src="img1.jpeg"><img src="img1.jpeg" alt="Gallery 7" style="object-position:top center"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item" data-src="img13.png"><img src="img13.png" alt="Gallery 8"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <div class="gal-item" data-src="img11.png"><img src="img11.png" alt="Gallery 9"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+    <!-- Row 4: wide fills remaining + tall new photo -->
+    <div class="gal-item gal-wide" data-src="img12.png"><img src="img12.png" alt="Gallery 10"><div class="gal-veil"><span class="gal-plus">+</span></div></div>
+  </div>
+</section>
+
+<!-- ═══ CTA — photo bg ═══ -->
+<div class="cta-wrap">
+  <div class="cta-box">
+    <div class="cta-photo"></div>
+    <div class="cta-overlay"></div>
+    <div class="cta-content">
+      <h2>Let's Get You<br><em>Booked!</em></h2>
+      <p>Secure your appointment today and experience seamless lace and long-lasting results.</p>
+    </div>
+    <div class="cta-btn-wrap">
+      <button class="btn btn-pink" id="ctaBook" style="padding:14px 32px;">Book Appointment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testimonials" id="testimonials">
+  <!-- FLOATING BUBBLES -->
+  <div class="test-bubbles" aria-hidden="true">
+    <span class="bubble b1"></span>
+    <span class="bubble b2"></span>
+    <span class="bubble b3"></span>
+    <span class="bubble b4"></span>
+    <span class="bubble b5"></span>
+  </div>
+  <div class="test-head">
+    <div class="tag">Client Love</div>
+    <h2 class="display">What Our<br><em>Clients Say</em></h2>
+  </div>
+  <div class="test-wrap">
+    <div class="test-track" id="tTrack">
+      <div class="t-card">
+        <div class="t-quote">"</div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"I've had my fair share of wig installs, but this experience was on a completely different level. My lace was perfectly melted — the hairline looked completely natural, and the fit was so secure yet comfortable."</p>
+        <div class="t-author"><img class="t-img" src="img8.jpeg" alt="Sarah M"><div><div class="t-name">Sarah M.</div><div class="t-role">Custom Wig Styling</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-quote">"</div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"Best wig install I've ever had! She literally transformed my whole look. The lace was undetectable and everyone thought it was my real hair. I've already booked my next appointment!"</p>
+        <div class="t-author"><img class="t-img" src="img3.jpeg" alt="Jasmine T"><div><div class="t-name">Jasmine T.</div><div class="t-role">Frontal Install</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-quote">"</div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"I came in for a wig revamp and left looking like a whole new woman. She breathed new life into my old wig — styled it, cut it, and installed it flawlessly. The attention to detail is unmatched."</p>
+        <div class="t-author"><img class="t-img" src="img5.jpeg" alt="Destiny R"><div><div class="t-name">Destiny R.</div><div class="t-role">Wig Revamp</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-quote">"</div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"She did my closure install and I am OBSESSED. My lace laid so naturally, I almost cried. The vibe in the studio is so welcoming and she really takes her time to make sure everything is perfect. 10/10!"</p>
+        <div class="t-author"><img class="t-img" src="img2.jpeg" alt="Kezia B"><div><div class="t-name">Kezia B.</div><div class="t-role">Closure Install</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="test-controls">
+    <button class="t-btn" id="tPrev">&#8592;</button>
+    <button class="t-btn lit" id="tNext">&#8594;</button>
+    <div class="t-dots" id="tDots"></div>
+  </div>
+  <div class="reviews-cta">
+    <div class="g-row">
+      <div class="g-logo">G</div>
+      <div>
+        <div class="g-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="g-label">5.0 &middot; 47 Google Reviews</div>
+      </div>
+    </div>
+    <div class="review-links">
+      <a class="rev-btn read" href="https://www.google.com/search?q=Flawless+Wig+Studio" target="_blank" rel="noopener">&#128279; Read Reviews</a>
+      <a class="rev-btn write" href="https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID" target="_blank" rel="noopener">&#9733; Leave a Review</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ — photo bg ═══ -->
+<section class="faq-section" id="faq">
+  <div class="faq-photo"></div>
+  <div class="faq-overlay"></div>
+  <div class="faq-inner">
+    <div class="tag">Got Questions?</div>
+    <h2 class="display">Frequently<br><em>Asked Questions</em></h2>
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">How long does a wig install take?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>Most installs take between 1.5 to 3 hours depending on the style and technique. Lace melts and detailed baby hair work may take a bit longer. You'll receive a time estimate when you book.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Do I need to bring my own wig?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>Yes! We install your wig — we don't supply one. Please arrive with a clean, pre-plucked, and pre-bleached wig ready to go. If you need help sourcing quality hair, we're happy to point you in the right direction.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What's the difference between a frontal and closure install?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>A frontal runs ear to ear across the top of your head, giving more styling versatility including pulled-back looks. A closure is smaller (usually 4x4 or 5x5) and sits in the middle — great for natural-looking parts without a full frontal.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">How long will my install last?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>With proper care, an install typically lasts 2–4 weeks. We recommend sleeping with a satin bonnet, avoiding excess moisture at the roots, and coming in for a maintenance touch-up as needed.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Is a deposit required to book?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>Yes — a $25 non-refundable deposit is required to secure your appointment. This deposit goes toward your total. Cancellations must be made at least 24 hours in advance to avoid forfeiting your deposit.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">Can I get my wig styled on the same day as my install?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>Absolutely! Just let us know when booking so we can schedule enough time. We do cuts, curls, flat iron, and more — just bring your inspiration photos!</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">What if I need to reschedule?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><p>Life happens! You can reschedule up to 24 hours before your appointment at no charge. Use the link in your confirmation email or contact us directly and we'll find a new time that works for you.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="contact" id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="tag">Get In Touch</div>
+      <h2 class="display">Contact<br><em>Us</em></h2>
+      <p style="font-size:.76rem;line-height:1.85;color:rgba(255,255,255,.44);margin-top:12px">Ready for your next flawless install? Fill out the form and we'll confirm your appointment.</p>
+      <div class="contact-info">
+        <div class="c-row"><div class="c-ico">&#9993;</div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31585f575e71575d50465d54424246585642454455585e1f525e5c">[email&#160;protected]</a></div>
+        <div class="c-row"><div class="c-ico">&#9742;</div>(877) 297-5454</div>
+        <div class="c-row"><div class="c-ico">&#9679;</div>6391 Elgin Celina, Delaware</div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="field"><label>Your Name</label><input type="text" placeholder="e.g. Jasmine Smith" autocomplete="name"></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="field">
+        <label>Service</label>
+        <select>
+          <option value="" disabled selected>Select a service</option>
+          <option>Frontal Wig Install — $170</option>
+          <option>Closure Install — $150</option>
+          <option>Wig Revamp — $190</option>
+          <option>Custom Styling</option>
+        </select>
+      </div>
+      <div class="field"><label>Message</label><textarea placeholder="Tell us about the look you want..."></textarea></div>
+      <button class="btn btn-pink" style="align-self:flex-start;">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ POLICIES ═══ -->
+<section class="policies" id="policies">
+  <div class="pol-inner">
+    <div class="pol-img"><img src="img9.jpeg" alt="Studio policies"></div>
+    <div>
+      <div class="tag" style="color:var(--pink-dk)">Before You Come In</div>
+      <h2 class="display on-light">Studio<br><em>Policies</em></h2>
+      <div class="pol-list">
+        <div class="pol-item"><div class="pol-check">&#x2713;</div>$25 deposit required to confirm — non-refundable</div>
+        <div class="pol-item"><div class="pol-check">&#x2713;</div>Cancel or reschedule at least 24 hours in advance</div>
+        <div class="pol-item"><div class="pol-check">&#x2713;</div>10 minute grace period — late arrivals may be cancelled</div>
+        <div class="pol-item"><div class="pol-check">&#x2713;</div>Please arrive with inspiration photos ready</div>
+        <div class="pol-item"><div class="pol-check">&#x2713;</div>No extra guests unless previously approved</div>
+      </div>
+      <button class="btn btn-pink" id="polBook">Book Now</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <span class="foot-logo">Flawless<em>Wig</em> Studio</span>
+      <p class="foot-desc">Book your flawless install today and step out with confidence. Where Beauty Meets Precision.</p>
+      <div class="newsletter"><input type="email" placeholder="Your email..."><button>Subscribe</button></div>
+    </div>
+    <div class="foot-col"><h4>Pages</h4><ul><li><a href="#">Home</a></li><li><a href="#services">Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="foot-col"><h4>Info</h4><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Payment Methods</a></li><li><a href="#">Policies</a></li><li><a href="#">Returns</a></li></ul></div>
+    <div class="foot-col"><h4>Social</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li><li><a href="#">Facebook</a></li><li><a href="#">YouTube</a></li></ul></div>
+  </div>
+  <div class="foot-bottom">
+    <span class="foot-copy">&copy; 2026 Flawless Wig Studio. All rights reserved.</span>
+    <div class="socials">
+      <a href="#" class="soc-btn">ig</a><a href="#" class="soc-btn">tk</a>
+      <a href="#" class="soc-btn">fb</a><a href="#" class="soc-btn">yt</a>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+try {
+
+/* ── EMAIL POPUP ── */
+var emailPopup = document.getElementById('emailPopup');
+function showEmailPopup(){
+  if(sessionStorage.getItem('ep_done')) return;
+  emailPopup.classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function hideEmailPopup(){
+  emailPopup.classList.remove('show');
+  document.body.style.overflow='';
+  sessionStorage.setItem('ep_done','1');
+}
+setTimeout(showEmailPopup, 3200);
+document.getElementById('epX').addEventListener('click', hideEmailPopup);
+document.getElementById('epSkip').addEventListener('click', hideEmailPopup);
+emailPopup.addEventListener('click', function(e){ if(e.target===emailPopup) hideEmailPopup(); });
+document.getElementById('epSubmit').addEventListener('click', function(){
+  var em=document.getElementById('epEmail').value.trim();
+  if(!em||!em.includes('@')){ document.getElementById('epEmail').style.borderColor='var(--pink-dk)'; return; }
+  document.getElementById('epBody').innerHTML='<div style="text-align:center;padding:18px 0"><div style="font-family:Playfair Display,serif;font-size:3rem;color:var(--pink-lt);margin-bottom:11px">&#10003;</div><div style="font-family:Playfair Display,serif;font-size:1.55rem;font-weight:400;margin-bottom:9px">You\'re on the list!</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.8">Your 10% code goes to <strong style="color:var(--pink-lt)">'+em+'</strong> shortly.</p><button onclick="hideEmailPopup()" style="margin-top:20px;display:inline-flex;padding:10px 24px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Continue to Site</button></div>';
+  setTimeout(hideEmailPopup, 4000);
+});
+
+/* ── FLOAT BOOK ── */
+var floatBook=document.getElementById('floatBook');
+window.addEventListener('scroll',function(){ floatBook.classList.toggle('visible',window.scrollY>400); });
+floatBook.addEventListener('click',function(){ openBooking('General'); });
+
+/* ── PROMO BANNER ── */
+document.getElementById('promoX').addEventListener('click',function(){
+  document.getElementById('promoBanner').classList.add('hidden');
+  document.getElementById('nav').classList.add('banner-gone');
+});
+document.getElementById('promoCta').addEventListener('click',function(){ openBooking('General'); });
+
+/* ── WAITLIST ── */
+var wlOverlay=document.getElementById('wlOverlay');
+function openWaitlist(){ wlOverlay.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeWaitlist(){ wlOverlay.classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('wlClose').addEventListener('click', closeWaitlist);
+wlOverlay.addEventListener('click',function(e){ if(e.target===wlOverlay) closeWaitlist(); });
+document.getElementById('wlTrigger').addEventListener('click', openWaitlist);
+document.getElementById('wlSubmit').addEventListener('click',function(){
+  var name=document.getElementById('wlName').value.trim();
+  var em=document.getElementById('wlEmail').value.trim();
+  var phone=document.getElementById('wlPhone').value.trim();
+  var service=document.getElementById('wlService').value;
+  var date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  if(!name){ document.getElementById('wlName').style.borderColor='var(--pink-dk)'; return; }
+  if(!em||!em.includes('@')){ document.getElementById('wlEmail').style.borderColor='var(--pink-dk)'; return; }
+  // ── Submit silently to Google Sheets via Google Form ──
+  // ── Submit to Google Sheets via hidden iframe (avoids CORS block) ──
+  var formURL='https://docs.google.com/forms/d/e/1FAIpQLSdInq5Ox01IL-cMHnPLLuyPB0o6XzFC9gvJPjuqEHvA9N7SQw/formResponse';
+  var iframe=document.getElementById('wlHiddenFrame');
+  var tempForm=document.createElement('form');
+  tempForm.action=formURL;
+  tempForm.method='POST';
+  tempForm.target='wlHiddenFrame';
+  tempForm.style.display='none';
+  var fields={'entry.1343506361':name,'entry.1831961405':em,'entry.1434906594':phone,'entry.1183971031':service,'entry.2117657656':date};
+  Object.keys(fields).forEach(function(k){
+    var input=document.createElement('input');
+    input.type='hidden';input.name=k;input.value=fields[k];
+    tempForm.appendChild(input);
+  });
+  document.body.appendChild(tempForm);
+  tempForm.submit();
+  setTimeout(function(){ document.body.removeChild(tempForm); },1000);
+  document.querySelector('.wl-panel').innerHTML='<div style="text-align:center;padding:28px 18px"><div style="font-family:Playfair Display,serif;font-size:3.2rem;color:var(--pink-lt);margin-bottom:14px">&#10003;</div><div style="font-family:Playfair Display,serif;font-size:1.7rem;font-weight:400;margin-bottom:11px">You\'re on the waitlist!</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.85;max-width:290px;margin:0 auto">Hi <strong style="color:var(--pink-lt)">'+name+'</strong> — we\'ll reach out to <strong style="color:var(--pink-lt)">'+em+'</strong> the moment a spot opens.</p><button onclick="closeWaitlist()" style="margin-top:24px;display:inline-flex;padding:11px 26px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Close</button></div>';
+});
+
+/* ── BOOKING MODAL ── */
+var ACUITY='https://acuityscheduling.com/schedule.php?owner=33887867';
+var bmOverlay=document.getElementById('bmOverlay');
+var bmFrame=document.getElementById('bmFrame');
+var bmLoader=document.getElementById('bmLoader');
+var bmSvcTag=document.getElementById('bmSvcTag');
+function openBooking(svc){
+  bmSvcTag.textContent=(svc&&svc!=='General')?svc:'Book Appointment';
+  var url=(svc&&svc!=='General')?ACUITY+'&appointmentType='+encodeURIComponent(svc):ACUITY;
+  bmLoader.classList.remove('gone'); bmFrame.src='';
+  bmOverlay.classList.add('open'); document.body.style.overflow='hidden';
+  setTimeout(function(){ bmFrame.src=url; },100);
+  bmFrame.onload=function(){ bmLoader.classList.add('gone'); };
+}
+function closeBooking(){
+  bmOverlay.classList.remove('open'); document.body.style.overflow='';
+  setTimeout(function(){ bmFrame.src=''; },400);
+}
+document.getElementById('bmClose').addEventListener('click', closeBooking);
+bmOverlay.addEventListener('click',function(e){ if(e.target===bmOverlay) closeBooking(); });
+
+/* ── ALL BOOK BUTTONS ── */
+var bookMap={
+  navBook:'General', mobBookBtn:'General', heroBook:'General',
+  svcCtaBtn:'General', ctaBook:'General', polBook:'General',
+  svcBtn1:'Frontal Wig Install', svcBtn2:'Closure Install', svcBtn3:'Wig Revamp',
+  dealBtn1:'Frontal Wig Install', dealBtn2:'Frontal Wig Install', dealBtn3:'General'
+};
+Object.keys(bookMap).forEach(function(id){
+  var el=document.getElementById(id);
+  if(el) el.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(id==='mobBookBtn'){ document.getElementById('mobMenu').classList.remove('open'); document.getElementById('ham').classList.remove('open'); document.body.style.overflow=''; }
+    openBooking(bookMap[id]);
+  });
+});
+['svcCard1','svcCard2','svcCard3'].forEach(function(id,i){
+  var svcs=['Frontal Wig Install','Closure Install','Wig Revamp'];
+  var el=document.getElementById(id);
+  if(el) el.addEventListener('click',function(){ openBooking(svcs[i]); });
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ closeBooking(); closeWaitlist(); } });
+
+/* ── NAV ── */
+var nav=document.getElementById('nav');
+var ham=document.getElementById('ham');
+var mobMenu=document.getElementById('mobMenu');
+window.addEventListener('scroll',function(){ nav.classList.toggle('solid',window.scrollY>50); });
+ham.addEventListener('click',function(){
+  ham.classList.toggle('open'); mobMenu.classList.toggle('open');
+  document.body.style.overflow=mobMenu.classList.contains('open')?'hidden':'';
+});
+document.querySelectorAll('.mm-l').forEach(function(a){
+  a.addEventListener('click',function(){ ham.classList.remove('open'); mobMenu.classList.remove('open'); document.body.style.overflow=''; });
+});
+
+/* ── FAQ ACCORDION ── */
+document.querySelectorAll('.faq-item').forEach(function(item){
+  item.querySelector('.faq-q').addEventListener('click',function(){
+    var wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+/* ── TESTIMONIAL SLIDER + AUTOPLAY ── */
+var track=document.getElementById('tTrack');
+var dotsEl=document.getElementById('tDots');
+var cur=0, autoTimer=null;
+var cards=track.children.length;
+for(var i=0;i<cards;i++){
+  var d=document.createElement('span');
+  d.className='t-dot'+(i===0?' active':'');
+  d.dataset.i=i;
+  (function(idx){ d.addEventListener('click',function(){ slideTo(idx); resetAuto(); }); })(i);
+  dotsEl.appendChild(d);
+}
+function getVis(){ return window.innerWidth>=680?2:1; }
+function slideTo(n){
+  var max=track.children.length-getVis();
+  cur=Math.max(0,Math.min(n,max));
+  var w=track.children[0].offsetWidth+14;
+  track.style.transform='translateX(-'+(cur*w)+'px)';
+  document.getElementById('tPrev').classList.toggle('lit',cur===0);
+  document.getElementById('tNext').classList.toggle('lit',cur<max);
+  dotsEl.querySelectorAll('.t-dot').forEach(function(d,idx){ d.classList.toggle('active',idx===cur); });
+}
+function startAuto(){ autoTimer=setInterval(function(){ var mx=track.children.length-getVis(); slideTo(cur>=mx?0:cur+1); },3000); }
+function stopAuto(){ clearInterval(autoTimer); }
+function resetAuto(){ stopAuto(); startAuto(); }
+document.getElementById('tNext').addEventListener('click',function(){ slideTo(cur+1); resetAuto(); });
+document.getElementById('tPrev').addEventListener('click',function(){ slideTo(cur-1); resetAuto(); });
+window.addEventListener('resize',function(){ slideTo(0); });
+var ts=0;
+track.addEventListener('touchstart',function(e){ ts=e.touches[0].clientX; stopAuto(); },{passive:true});
+track.addEventListener('touchend',function(e){ var dx=ts-e.changedTouches[0].clientX; if(Math.abs(dx)>40) slideTo(dx>0?cur+1:cur-1); resetAuto(); });
+track.addEventListener('mouseenter',stopAuto);
+track.addEventListener('mouseleave',startAuto);
+startAuto();
+
+/* ── GALLERY LIGHTBOX ── */
+var lb=document.getElementById('lb');
+var lbImg=document.getElementById('lbImg');
+document.querySelectorAll('.gal-item').forEach(function(item){
+  item.addEventListener('click',function(){ lbImg.src=item.dataset.src; lb.classList.add('open'); document.body.style.overflow='hidden'; });
+});
+document.getElementById('lbClose').addEventListener('click',function(){ lb.classList.remove('open'); document.body.style.overflow=''; });
+lb.addEventListener('click',function(e){ if(e.target===lb){ lb.classList.remove('open'); document.body.style.overflow=''; } });
+
+/* ── CUSTOM CURSOR ── */
+if(window.matchMedia('(pointer:fine)').matches){
+  var cd=document.createElement('div');
+  var cr=document.createElement('div');
+  cd.style.cssText='position:fixed;width:8px;height:8px;background:var(--pink);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)';
+  cr.style.cssText='position:fixed;width:28px;height:28px;border:1px solid rgba(232,160,176,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease';
+  document.body.appendChild(cd); document.body.appendChild(cr);
+  var rx=0,ry=0,mx=0,my=0;
+  document.addEventListener('mousemove',function(e){ mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'; });
+  (function loop(){ rx+=(mx-rx)*.13;ry+=(my-ry)*.13;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop); })();
+}
+
+}catch(e){ console.warn('JS:',e); }
+</script>
+</body>
+</html>
