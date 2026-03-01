@@ -1052,7 +1052,7 @@ setTimeout(function(){
     <div class="foot-brand">
       <span class="foot-logo">Flawless<em>Wig</em> Studio</span>
       <p class="foot-desc">Book your flawless install today and step out with confidence. Where Beauty Meets Precision.</p>
-      <div class="newsletter"><input type="email" placeholder="Your email..."><button>Subscribe</button></div>
+      <div class="newsletter"><input type="email" id="footerEmail" placeholder="Your email..."><button id="footerSubscribe">Subscribe</button></div>
     </div>
     <div class="foot-col"><h4>Pages</h4><ul><li><a href="#">Home</a></li><li><a href="#services">Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li></ul></div>
     <div class="foot-col"><h4>Info</h4><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Payment Methods</a></li><li><a href="#">Policies</a></li><li><a href="#">Returns</a></li></ul></div>
@@ -1086,14 +1086,49 @@ setTimeout(showEmailPopup, 3200);
 document.getElementById('epX').addEventListener('click', hideEmailPopup);
 document.getElementById('epSkip').addEventListener('click', hideEmailPopup);
 emailPopup.addEventListener('click', function(e){ if(e.target===emailPopup) hideEmailPopup(); });
+/* ── FLODESK: shared subscribe function ── */
+function subscribeToFlodesk(email, onSuccess, onError){
+  fetch('https://api.flodesk.com/v1/subscribers',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization':'Basic '+btoa('fd_key_bd51265ff865499d8b15797b52fc2e1e.E1SysHzaHzvW7puFGmywPv9B6EaB4sUF9gPmGH2ISdxKf1syfPoyxciih2kr1ZOAlIP0nv3aJ2sxeFt3xRISgyfpS8AC1EZbfQxnHyQVfZMxVEudEZUp90KkwBHYCQWr4Lpe2PLHuH0PRPyEl3d3ZTOs056EXoXrpPHtzUrJWBOqIbcSD8ffzMNvaKWoNGEv:')
+    },
+    body:JSON.stringify({
+      email:email,
+      segments:[{id:'69a47ff7b7ecbac76b2582db'}]
+    })
+  })
+  .then(function(res){ if(res.ok||res.status===200||res.status===201){ onSuccess(); }else{ onError(); } })
+  .catch(function(){ onError(); });
+}
+
 document.getElementById('epSubmit').addEventListener('click', function(){
   var em=document.getElementById('epEmail').value.trim();
   if(!em||!em.includes('@')){ document.getElementById('epEmail').style.borderColor='var(--pink-dk)'; return; }
-  document.getElementById('epBody').innerHTML='<div style="text-align:center;padding:18px 0"><div style="font-family:Playfair Display,serif;font-size:3rem;color:var(--pink-lt);margin-bottom:11px">&#10003;</div><div style="font-family:Playfair Display,serif;font-size:1.55rem;font-weight:400;margin-bottom:9px">You\'re on the list!</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.8">Your 10% code goes to <strong style="color:var(--pink-lt)">'+em+'</strong> shortly.</p><button onclick="hideEmailPopup()" style="margin-top:20px;display:inline-flex;padding:10px 24px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Continue to Site</button></div>';
-  setTimeout(hideEmailPopup, 4000);
+  subscribeToFlodesk(em, function(){
+    document.getElementById('epBody').innerHTML='<div style="text-align:center;padding:18px 0"><div style="font-family:Playfair Display,serif;font-size:3rem;color:var(--pink-lt);margin-bottom:11px">&#10003;</div><div style="font-family:Playfair Display,serif;font-size:1.55rem;font-weight:400;margin-bottom:9px">You\'re on the list!</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.8">Your 10% code goes to <strong style="color:var(--pink-lt)">'+em+'</strong> shortly.</p><button onclick="hideEmailPopup()" style="margin-top:20px;display:inline-flex;padding:10px 24px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:linear-gradient(135deg,var(--pink-dk),var(--pink-deep));color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Continue to Site</button></div>';
+    setTimeout(hideEmailPopup, 4000);
+  }, function(){
+    document.getElementById('epBody').innerHTML='<div style="text-align:center;padding:18px 0"><div style="font-size:3rem;margin-bottom:11px">&#x26A0;</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.8">Something went wrong. Please try again.</p><button onclick="hideEmailPopup()" style="margin-top:20px;display:inline-flex;padding:10px 24px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,.1);color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Close</button></div>';
+  });
 });
 
-/* ── FLOAT BOOK ── */
+/* ── FOOTER SUBSCRIBE ── */
+document.getElementById('footerSubscribe').addEventListener('click',function(){
+  var em=document.getElementById('footerEmail').value.trim();
+  var btn=document.getElementById('footerSubscribe');
+  if(!em||!em.includes('@')){ document.getElementById('footerEmail').style.borderColor='var(--pink)'; return; }
+  btn.textContent='Subscribing...';
+  subscribeToFlodesk(em, function(){
+    btn.textContent='✓ Subscribed!';
+    document.getElementById('footerEmail').value='';
+    setTimeout(function(){ btn.textContent='Subscribe'; },3000);
+  }, function(){
+    btn.textContent='Try again';
+    setTimeout(function(){ btn.textContent='Subscribe'; },3000);
+  });
+});
 var floatBook=document.getElementById('floatBook');
 window.addEventListener('scroll',function(){ floatBook.classList.toggle('visible',window.scrollY>400); });
 floatBook.addEventListener('click',function(){ openBooking('General'); });
