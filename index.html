@@ -1086,18 +1086,12 @@ setTimeout(showEmailPopup, 3200);
 document.getElementById('epX').addEventListener('click', hideEmailPopup);
 document.getElementById('epSkip').addEventListener('click', hideEmailPopup);
 emailPopup.addEventListener('click', function(e){ if(e.target===emailPopup) hideEmailPopup(); });
-/* ── FLODESK: shared subscribe function ── */
+/* ── FLODESK: shared subscribe function via Netlify ── */
 function subscribeToFlodesk(email, onSuccess, onError){
-  fetch('https://api.flodesk.com/v1/subscribers',{
+  fetch('/.netlify/functions/subscribe',{
     method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization':'Basic '+btoa('fd_key_bd51265ff865499d8b15797b52fc2e1e.E1SysHzaHzvW7puFGmywPv9B6EaB4sUF9gPmGH2ISdxKf1syfPoyxciih2kr1ZOAlIP0nv3aJ2sxeFt3xRISgyfpS8AC1EZbfQxnHyQVfZMxVEudEZUp90KkwBHYCQWr4Lpe2PLHuH0PRPyEl3d3ZTOs056EXoXrpPHtzUrJWBOqIbcSD8ffzMNvaKWoNGEv:')
-    },
-    body:JSON.stringify({
-      email:email,
-      segments:[{id:'69a47ff7b7ecbac76b2582db'}]
-    })
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:email})
   })
   .then(function(res){ if(res.ok||res.status===200||res.status===201){ onSuccess(); }else{ onError(); } })
   .catch(function(){ onError(); });
