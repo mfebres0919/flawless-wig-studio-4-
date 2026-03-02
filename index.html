@@ -353,129 +353,163 @@ nav.solid{background:rgba(10,10,10,.98)}
    NEW CLIENTS
 ═══════════════════════ */
 .new-clients{
-  background:var(--off-white);
+  background:var(--black2);
   padding:clamp(64px,12vw,120px) var(--pad);
-  color:var(--black);
+  position:relative;overflow:hidden;
 }
-.nc-top{
-  text-align:center;margin-bottom:clamp(40px,7vw,72px);
+/* subtle radial glow top-right */
+.new-clients::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(232,160,176,.07) 0%,transparent 65%);
+  pointer-events:none;
 }
+.nc-inner{position:relative;z-index:1}
+
+/* header */
+.nc-top{margin-bottom:clamp(40px,7vw,64px)}
 .nc-tag{
   display:inline-flex;align-items:center;gap:10px;
   font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--pink-dk);font-weight:600;margin-bottom:16px;
+  color:var(--pink);font-weight:600;margin-bottom:16px;
 }
-.nc-tag::before,.nc-tag::after{content:'';width:20px;height:1px;background:var(--pink-dk);flex-shrink:0}
+.nc-tag::before{content:'';width:20px;height:1px;background:var(--pink);flex-shrink:0}
 .nc-h2{
   font-family:'Playfair Display',serif;
   font-size:clamp(2.2rem,5.5vw,4rem);
   font-weight:400;line-height:1.05;margin-bottom:14px;
-  color:var(--black);
 }
-.nc-h2 em{font-style:italic;color:var(--pink-dk)}
+.nc-h2 em{font-style:italic;color:var(--pink)}
 .nc-intro{
-  font-size:.82rem;color:rgba(10,10,10,.55);
-  line-height:1.85;max-width:540px;margin:0 auto;
+  font-size:.78rem;color:rgba(255,255,255,.45);
+  line-height:1.85;max-width:500px;
 }
 
-/* staggered card grid — alternates dark/light */
-.nc-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:0;
-  max-width:900px;
-  margin:0 auto 56px;
+/* two-column body */
+.nc-body{
+  display:grid;grid-template-columns:1fr;
+  gap:clamp(40px,7vw,80px);
 }
-@media(min-width:640px){.nc-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:760px){.nc-body{grid-template-columns:1fr 1fr;align-items:start}}
 
-.nc-card{
-  padding:clamp(28px,5vw,48px);
-  display:flex;flex-direction:column;gap:12px;
-  border:1px solid rgba(0,0,0,.07);
-  transition:transform .25s,box-shadow .25s;
-  position:relative;overflow:hidden;
+/* LEFT — vertical timeline steps */
+.nc-steps{display:flex;flex-direction:column;gap:0}
+.nc-step{
+  display:flex;gap:20px;
+  padding:24px 0;
+  border-bottom:1px solid rgba(232,160,176,.08);
 }
-.nc-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.1)}
-.nc-card.dark{background:var(--black2);color:var(--white);border-color:rgba(255,255,255,.06)}
-.nc-card.dark .nc-card-num{color:rgba(232,160,176,.2)}
-.nc-card.dark .nc-card-title{color:var(--white)}
-.nc-card.dark .nc-card-text{color:rgba(255,255,255,.52)}
-.nc-card.light{background:var(--white);color:var(--black)}
-.nc-card.light .nc-card-num{color:rgba(196,96,122,.12)}
-.nc-card.light .nc-card-title{color:var(--black)}
-.nc-card.light .nc-card-text{color:rgba(10,10,10,.55)}
-/* big ghost number */
-.nc-card-num{
+.nc-step:first-child{padding-top:0}
+/* number + vertical line */
+.nc-step-left{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  flex-shrink:0;
+}
+.nc-step-num{
+  width:36px;height:36px;
+  border:1px solid rgba(232,160,176,.25);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
   font-family:'Playfair Display',serif;
-  font-size:5rem;font-weight:700;font-style:italic;
-  line-height:1;letter-spacing:-.02em;
-  margin-bottom:-8px;
+  font-size:.85rem;font-style:italic;
+  color:var(--pink);
+  flex-shrink:0;
 }
-.nc-card-icon{font-size:1.4rem;margin-bottom:4px}
-.nc-card-title{
+.nc-step-line{
+  flex:1;width:1px;
+  background:rgba(232,160,176,.1);
+  margin:6px 0;min-height:20px;
+}
+.nc-step:last-child .nc-step-line{display:none}
+.nc-step-title{
   font-family:'Playfair Display',serif;
-  font-size:clamp(1.2rem,2.5vw,1.5rem);
-  font-weight:500;line-height:1.15;
+  font-size:clamp(1rem,2.2vw,1.25rem);
+  font-weight:500;color:var(--white);
+  margin-bottom:6px;line-height:1.2;
 }
-.nc-card-text{font-size:.76rem;line-height:1.85}
-/* pink accent line on hover */
-.nc-card::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--pink-dk),var(--pink-lt));
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .3s;
+.nc-step-text{
+  font-size:.74rem;color:rgba(255,255,255,.45);line-height:1.85;
 }
-.nc-card:hover::after{transform:scaleX(1)}
 
-/* promo + CTA strip */
-.nc-bottom{
-  display:flex;flex-direction:column;align-items:center;gap:24px;
-  text-align:center;
-  background:var(--black);
-  padding:clamp(32px,6vw,56px) clamp(24px,6vw,80px);
-  max-width:900px;margin:0 auto;
+/* RIGHT — promo card */
+.nc-promo{
+  background:var(--black3);
+  border:1px solid rgba(232,160,176,.14);
+  padding:clamp(28px,5vw,44px);
   position:relative;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.4);
 }
-.nc-bottom::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(232,160,176,.12) 0%,transparent 65%);
+.nc-promo::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;
+  background:radial-gradient(circle,rgba(232,160,176,.1) 0%,transparent 65%);
   pointer-events:none;
 }
 .nc-promo-label{
-  font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--pink);font-weight:600;
+  font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--pink);font-weight:600;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
 }
+.nc-promo-label::before{content:'';width:16px;height:1px;background:var(--pink)}
 .nc-promo-headline{
   font-family:'Playfair Display',serif;
-  font-size:clamp(1.6rem,4vw,2.8rem);
-  color:var(--white);font-weight:400;line-height:1.1;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:var(--white);font-weight:400;line-height:1.05;
+  margin-bottom:12px;
 }
 .nc-promo-headline em{font-style:italic;color:var(--pink-lt)}
 .nc-promo-desc{
-  font-size:.78rem;color:rgba(255,255,255,.5);
-  line-height:1.85;max-width:460px;
+  font-size:.74rem;color:rgba(255,255,255,.45);
+  line-height:1.85;margin-bottom:24px;
 }
-.nc-code-row{
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;
+/* divider */
+.nc-divider{
+  width:100%;height:1px;
+  background:rgba(232,160,176,.1);
+  margin-bottom:24px;
+}
+.nc-code-box{
+  background:rgba(232,160,176,.05);
+  border:1px dashed rgba(232,160,176,.2);
+  padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+  margin-bottom:24px;
 }
 .nc-code{
   font-family:'Playfair Display',serif;
-  font-size:clamp(1.4rem,3vw,2rem);
+  font-size:clamp(1.3rem,3vw,1.8rem);
   font-style:italic;color:var(--pink-lt);
-  letter-spacing:.08em;
-  background:rgba(232,160,176,.08);
-  border:1px dashed rgba(232,160,176,.3);
-  padding:10px 24px;
+  letter-spacing:.06em;
+}
+.nc-code-label{
+  font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);
 }
 .nc-copy-btn{
-  background:rgba(232,160,176,.12);
+  background:transparent;
   border:1px solid rgba(232,160,176,.25);
   color:var(--pink-lt);
-  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
-  padding:10px 18px;cursor:pointer;
+  font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:8px 16px;cursor:pointer;
   transition:all .25s;font-family:'DM Sans',sans-serif;font-weight:600;
+  white-space:nowrap;
 }
-.nc-copy-btn:hover{background:var(--pink);color:var(--black)}
+.nc-copy-btn:hover{background:var(--pink);color:var(--black);border-color:var(--pink)}
+/* what's included */
+.nc-includes{margin-bottom:28px}
+.nc-includes-title{
+  font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);margin-bottom:12px;
+}
+.nc-include-item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:.72rem;color:rgba(255,255,255,.55);
+  line-height:1.65;padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.nc-include-item:last-child{border-bottom:none}
+.nc-check{color:var(--pink);font-size:.7rem;flex-shrink:0;margin-top:1px}
 
 /* ═══════════════════════
    GALLERY
@@ -1030,61 +1064,98 @@ setTimeout(function(){
       <a href="https://facebook.com" target="_blank" rel="noopener" class="about-soc">Facebook</a>
     </div>
 
-    <button class="btn btn-pink" onclick="openBooking('General')" style="padding:12px 28px">Book With Me</button>
+    <button class="btn btn-pink" onclick="scrollToServices()" style="padding:12px 28px">Book With Me</button>
   </div>
 </section>
 
 <!-- ═══ NEW CLIENTS ═══ -->
 <section class="new-clients" id="new-clients">
-  <div class="nc-top">
-    <div class="nc-tag">First Visit?</div>
-    <h2 class="nc-h2">Welcome,<br><em>New Client</em></h2>
-    <p class="nc-intro">Everything you need to know before your first appointment — so you walk in relaxed and walk out obsessed.</p>
-  </div>
+  <div class="nc-inner">
 
-  <!-- staggered dark/light card grid -->
-  <div class="nc-grid">
-
-    <div class="nc-card dark">
-      <div class="nc-card-num">01</div>
-      <div class="nc-card-icon">&#x1F4CB;</div>
-      <div class="nc-card-title">What to Expect</div>
-      <p class="nc-card-text">We start with a quick consultation about your hair goals and lifestyle. Then I handle everything — lace prep, adhesive, styling — so you leave looking completely natural and feeling your best.</p>
+    <div class="nc-top">
+      <div class="nc-tag">First Visit?</div>
+      <h2 class="nc-h2">Welcome,<br><em>New Client</em></h2>
+      <p class="nc-intro">Everything you need to know before your first appointment — so you walk in relaxed and walk out obsessed.</p>
     </div>
 
-    <div class="nc-card light">
-      <div class="nc-card-num">02</div>
-      <div class="nc-card-icon">&#x1F6BF;</div>
-      <div class="nc-card-title">Come With Clean Hair</div>
-      <p class="nc-card-text">Arrive with your natural hair freshly washed, blown out, and laid flat. No braids, twists, or product buildup — clean, flat hair gives you the best possible install and the longest-lasting result.</p>
-    </div>
+    <div class="nc-body">
 
-    <div class="nc-card light">
-      <div class="nc-card-num">03</div>
-      <div class="nc-card-icon">&#x1F454;</div>
-      <div class="nc-card-title">Have Your Wig Ready</div>
-      <p class="nc-card-text">Bring your wig pre-plucked if possible — but don't stress if not, I can customize the hairline. Need help sourcing a wig? Reach out before your appointment and I'll point you in the right direction.</p>
-    </div>
+      <!-- LEFT: timeline steps -->
+      <div class="nc-steps">
 
-    <div class="nc-card dark">
-      <div class="nc-card-num">04</div>
-      <div class="nc-card-icon">&#x23F0;</div>
-      <div class="nc-card-title">Plan Your Time</div>
-      <p class="nc-card-text">A typical install takes 2–3 hours depending on the service. Come fed, relaxed, and ready to be transformed. Good work takes time — and yours is worth every minute.</p>
-    </div>
+        <div class="nc-step">
+          <div class="nc-step-left">
+            <div class="nc-step-num">1</div>
+            <div class="nc-step-line"></div>
+          </div>
+          <div>
+            <div class="nc-step-title">What to Expect</div>
+            <p class="nc-step-text">We start with a quick consultation about your hair goals and lifestyle. Then I handle everything — lace prep, adhesive, styling — so you leave looking completely natural and feeling your best.</p>
+          </div>
+        </div>
 
-  </div>
+        <div class="nc-step">
+          <div class="nc-step-left">
+            <div class="nc-step-num">2</div>
+            <div class="nc-step-line"></div>
+          </div>
+          <div>
+            <div class="nc-step-title">Come With Clean Hair</div>
+            <p class="nc-step-text">Arrive with your natural hair freshly washed, blown out, and laid flat. No braids, twists, or product buildup — clean, flat hair gives you the best possible install and the longest-lasting result.</p>
+          </div>
+        </div>
 
-  <!-- promo strip -->
-  <div class="nc-bottom">
-    <div class="nc-promo-label">✦ New Client Exclusive</div>
-    <h3 class="nc-promo-headline">10% Off Your<br><em>First Install</em></h3>
-    <p class="nc-promo-desc">First-time clients get 10% off any wig install service. Use the code below when booking, or mention it at your appointment.</p>
-    <div class="nc-code-row">
-      <div class="nc-code">FLAWLESS10</div>
-      <button class="nc-copy-btn" onclick="navigator.clipboard.writeText('FLAWLESS10').then(function(){ this.textContent='Copied!'; var b=this; setTimeout(function(){ b.textContent='Copy Code'; },2000); }.bind(this))">Copy Code</button>
+        <div class="nc-step">
+          <div class="nc-step-left">
+            <div class="nc-step-num">3</div>
+            <div class="nc-step-line"></div>
+          </div>
+          <div>
+            <div class="nc-step-title">Have Your Wig Ready</div>
+            <p class="nc-step-text">Bring your wig pre-plucked if possible — but don't stress if not, I can customize the hairline. Need help sourcing a wig? Reach out before your appointment and I'll point you in the right direction.</p>
+          </div>
+        </div>
+
+        <div class="nc-step">
+          <div class="nc-step-left">
+            <div class="nc-step-num">4</div>
+          </div>
+          <div>
+            <div class="nc-step-title">Plan Your Time</div>
+            <p class="nc-step-text">A typical install takes 2–3 hours depending on the service. Come fed, relaxed, and ready to be transformed. Good work takes time — and yours is worth every minute.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: promo card -->
+      <div class="nc-promo">
+        <div class="nc-promo-label">New Client Exclusive</div>
+        <h3 class="nc-promo-headline">10% Off Your<br><em>First Install</em></h3>
+        <p class="nc-promo-desc">First-time clients get 10% off any wig install service. Use the code below when booking, or mention it at your appointment.</p>
+
+        <div class="nc-divider"></div>
+
+        <div class="nc-code-box">
+          <div>
+            <div class="nc-code">FLAWLESS10</div>
+            <div class="nc-code-label">Promo code — first install only</div>
+          </div>
+          <button class="nc-copy-btn" onclick="navigator.clipboard.writeText('FLAWLESS10').then(function(){ this.textContent='Copied!'; var b=this; setTimeout(function(){ b.textContent='Copy'; },2000); }.bind(this))">Copy</button>
+        </div>
+
+        <div class="nc-includes">
+          <div class="nc-includes-title">What's Included</div>
+          <div class="nc-include-item"><span class="nc-check">&#x2713;</span>Full lace melt &amp; adhesive application</div>
+          <div class="nc-include-item"><span class="nc-check">&#x2713;</span>Hairline customization &amp; baby hair styling</div>
+          <div class="nc-include-item"><span class="nc-check">&#x2713;</span>Style &amp; finish to your preference</div>
+          <div class="nc-include-item"><span class="nc-check">&#x2713;</span>Aftercare tips to protect your install</div>
+        </div>
+
+        <button class="btn btn-pink" onclick="scrollToServices()" style="width:100%;padding:14px 24px;font-size:.58rem;">Book Your First Appointment &#x2197;</button>
+      </div>
+
     </div>
-    <button class="btn btn-pink" onclick="openBooking('General')" style="padding:13px 32px;font-size:.62rem">Book Your First Appointment &#x2197;</button>
   </div>
 </section>
 
@@ -1480,7 +1551,7 @@ document.getElementById('promoX').addEventListener('click',function(){
   promoBanner.classList.add('hidden');
   setTimeout(setNavTop, 420);
 });
-document.getElementById('promoCta').addEventListener('click',function(){ openBooking('General'); });
+document.getElementById('promoCta').addEventListener('click',function(){ scrollToServices(); });
 
 /* ── WAITLIST ── */
 var wlOverlay=document.getElementById('wlOverlay');
@@ -1534,19 +1605,41 @@ document.getElementById('bmClose').addEventListener('click', closeBooking);
 bmOverlay.addEventListener('click',function(e){ if(e.target===bmOverlay) closeBooking(); });
 
 /* ── ALL BOOK BUTTONS ── */
-var bookMap={
-  navBook:'General', mobBookBtn:'General', heroBook:'General',
-  svcCtaBtn:'General', ctaBook:'General', polBook:'General',
-  svcBtn1:'Frontal Wig Install', svcBtn2:'Closure Install', svcBtn3:'Wig Revamp',
+function scrollToServices(){
+  var el = document.getElementById('services');
+  if(el) el.scrollIntoView({ behavior:'smooth' });
+}
+
+// Buttons that scroll to #services
+var scrollBtns = ['navBook','mobBookBtn','heroBook','ctaBook','polBook'];
+scrollBtns.forEach(function(id){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(id === 'mobBookBtn'){
+      document.getElementById('mobMenu').classList.remove('open');
+      document.getElementById('ham').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    scrollToServices();
+  });
+});
+
+// Deal buttons — open booking modal (specific offers)
+var dealMap = {
   dealBtn1:'Frontal Wig Install', dealBtn2:'Frontal Wig Install', dealBtn3:'General'
 };
-Object.keys(bookMap).forEach(function(id){
-  var el=document.getElementById(id);
-  if(el) el.addEventListener('click',function(e){
-    e.stopPropagation();
-    if(id==='mobBookBtn'){ document.getElementById('mobMenu').classList.remove('open'); document.getElementById('ham').classList.remove('open'); document.body.style.overflow=''; }
-    openBooking(bookMap[id]);
-  });
+Object.keys(dealMap).forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('click', function(e){ e.stopPropagation(); openBooking(dealMap[id]); });
+});
+
+// Service card buttons — open booking modal
+var svcCardMap = { svcBtn1:'Frontal Wig Install', svcBtn2:'Closure Install', svcBtn3:'Wig Revamp', svcCtaBtn:'General' };
+Object.keys(svcCardMap).forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener('click', function(e){ e.stopPropagation(); openBooking(svcCardMap[id]); });
 });
 ['svcCard1','svcCard2','svcCard3'].forEach(function(id,i){
   var svcs=['Frontal Wig Install','Closure Install','Wig Revamp'];
