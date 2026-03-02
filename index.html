@@ -106,11 +106,12 @@ body{
   position:fixed;top:0;left:0;right:0;z-index:210;
   background:linear-gradient(90deg,var(--pink-deep),var(--pink-dk),var(--pink),var(--pink-dk),var(--pink-deep));
   background-size:300% 100%;animation:shimmer 5s ease infinite;
-  padding:8px var(--pad);min-height:var(--banner-h);
+  padding:8px var(--pad);
   display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
-  transition:opacity .4s,visibility .4s;
+  transition:max-height .4s ease,opacity .4s,padding .4s;
+  overflow:hidden;max-height:120px;
 }
-.promo-banner.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.promo-banner.hidden{max-height:0;opacity:0;pointer-events:none;padding-top:0;padding-bottom:0}
 @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
 .promo-text{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--white);text-align:center;line-height:1.6}
 .promo-text strong{color:var(--black);background:rgba(255,255,255,.92);padding:1px 8px;border-radius:100px;margin:0 2px;font-weight:700}
@@ -124,7 +125,7 @@ body{
 ═══════════════════════ */
 nav{
   position:fixed;left:0;right:0;z-index:200;
-  top:var(--banner-h);
+  top:0;
   height:var(--nav-h);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 var(--pad);gap:14px;
@@ -134,7 +135,6 @@ nav{
   transition:background .4s,top .4s;
 }
 nav.solid{background:rgba(10,10,10,.98)}
-nav.banner-gone{top:0}
 .nav-logo{font-family:'Playfair Display',serif;font-size:clamp(.9rem,3vw,1.3rem);font-weight:400;letter-spacing:.12em;color:var(--white);white-space:nowrap;flex-shrink:0}
 .nav-logo em{font-style:italic;color:var(--pink)}
 .nav-links{display:none;list-style:none;gap:clamp(14px,2.2vw,34px);align-items:center}
@@ -253,6 +253,229 @@ nav.banner-gone{top:0}
 .deal-new{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;color:var(--pink-lt)}
 .deal-old{font-size:.74rem;color:rgba(255, 255, 255, 0.822);text-decoration:line-through}
 .deal-expires{font-size:.56rem;letter-spacing:.14em;color:rgba(255, 255, 255, 0.822);margin-top:10px;text-transform:uppercase}
+
+/* ═══════════════════════
+   ABOUT ME
+═══════════════════════ */
+/* Full-bleed photo background with centered overlaid content */
+.about{
+  position:relative;
+  background:var(--black);
+  padding:clamp(80px,14vw,160px) var(--pad);
+  overflow:hidden;
+}
+/* Background photo taking right 55% */
+.about-bg{
+  position:absolute;top:0;right:0;bottom:0;
+  width:55%;
+  z-index:0;
+}
+.about-bg img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:top;
+  filter:saturate(.7) brightness(.5);
+}
+/* gradient fade from left */
+.about-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--black) 0%,rgba(10,10,10,.85) 40%,rgba(10,10,10,.2) 100%);
+}
+@media(max-width:759px){
+  .about-bg{width:100%;opacity:.35}
+  .about-bg::after{background:linear-gradient(to top,var(--black) 0%,rgba(10,10,10,.6) 60%,transparent 100%)}
+}
+
+.about-content{
+  position:relative;z-index:1;
+  max-width:560px;
+}
+.about-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--pink);font-weight:600;margin-bottom:20px;
+}
+.about-tag::before{content:'';width:24px;height:1px;background:var(--pink);flex-shrink:0}
+.about-h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,6vw,4.5rem);
+  font-weight:400;line-height:1.05;
+  margin-bottom:8px;
+}
+.about-h2 em{font-style:italic;color:var(--pink)}
+.about-name-line{
+  font-size:.64rem;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:28px;
+  font-family:'DM Sans',sans-serif;
+}
+/* big italic quote */
+.about-quote{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,2.5vw,1.35rem);
+  font-style:italic;
+  color:rgba(255,255,255,.82);
+  line-height:1.65;
+  padding-left:20px;
+  border-left:2px solid var(--pink);
+  margin-bottom:28px;
+}
+.about-bio-text{
+  font-size:.78rem;color:rgba(255,255,255,.58);
+  line-height:1.95;margin-bottom:32px;
+}
+.about-bio-text strong{color:rgba(255,255,255,.88)}
+/* horizontal credential pills */
+.about-creds{
+  display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;
+}
+.about-cred{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(232,160,176,.08);
+  border:1px solid rgba(232,160,176,.2);
+  padding:7px 14px;
+  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+.about-cred-dot{width:5px;height:5px;background:var(--pink);border-radius:50%;flex-shrink:0}
+/* social row */
+.about-social-row{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;
+}
+.about-soc{
+  padding:8px 18px;
+  border:1px solid rgba(255,255,255,.15);
+  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+  transition:all .25s;
+}
+.about-soc:hover{border-color:var(--pink);color:var(--pink-lt)}
+
+/* ═══════════════════════
+   NEW CLIENTS
+═══════════════════════ */
+.new-clients{
+  background:var(--off-white);
+  padding:clamp(64px,12vw,120px) var(--pad);
+  color:var(--black);
+}
+.nc-top{
+  text-align:center;margin-bottom:clamp(40px,7vw,72px);
+}
+.nc-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--pink-dk);font-weight:600;margin-bottom:16px;
+}
+.nc-tag::before,.nc-tag::after{content:'';width:20px;height:1px;background:var(--pink-dk);flex-shrink:0}
+.nc-h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.2rem,5.5vw,4rem);
+  font-weight:400;line-height:1.05;margin-bottom:14px;
+  color:var(--black);
+}
+.nc-h2 em{font-style:italic;color:var(--pink-dk)}
+.nc-intro{
+  font-size:.82rem;color:rgba(10,10,10,.55);
+  line-height:1.85;max-width:540px;margin:0 auto;
+}
+
+/* staggered card grid — alternates dark/light */
+.nc-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  max-width:900px;
+  margin:0 auto 56px;
+}
+@media(min-width:640px){.nc-grid{grid-template-columns:1fr 1fr}}
+
+.nc-card{
+  padding:clamp(28px,5vw,48px);
+  display:flex;flex-direction:column;gap:12px;
+  border:1px solid rgba(0,0,0,.07);
+  transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.nc-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.nc-card.dark{background:var(--black2);color:var(--white);border-color:rgba(255,255,255,.06)}
+.nc-card.dark .nc-card-num{color:rgba(232,160,176,.2)}
+.nc-card.dark .nc-card-title{color:var(--white)}
+.nc-card.dark .nc-card-text{color:rgba(255,255,255,.52)}
+.nc-card.light{background:var(--white);color:var(--black)}
+.nc-card.light .nc-card-num{color:rgba(196,96,122,.12)}
+.nc-card.light .nc-card-title{color:var(--black)}
+.nc-card.light .nc-card-text{color:rgba(10,10,10,.55)}
+/* big ghost number */
+.nc-card-num{
+  font-family:'Playfair Display',serif;
+  font-size:5rem;font-weight:700;font-style:italic;
+  line-height:1;letter-spacing:-.02em;
+  margin-bottom:-8px;
+}
+.nc-card-icon{font-size:1.4rem;margin-bottom:4px}
+.nc-card-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.2rem,2.5vw,1.5rem);
+  font-weight:500;line-height:1.15;
+}
+.nc-card-text{font-size:.76rem;line-height:1.85}
+/* pink accent line on hover */
+.nc-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--pink-dk),var(--pink-lt));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s;
+}
+.nc-card:hover::after{transform:scaleX(1)}
+
+/* promo + CTA strip */
+.nc-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:24px;
+  text-align:center;
+  background:var(--black);
+  padding:clamp(32px,6vw,56px) clamp(24px,6vw,80px);
+  max-width:900px;margin:0 auto;
+  position:relative;overflow:hidden;
+}
+.nc-bottom::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(232,160,176,.12) 0%,transparent 65%);
+  pointer-events:none;
+}
+.nc-promo-label{
+  font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--pink);font-weight:600;
+}
+.nc-promo-headline{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,4vw,2.8rem);
+  color:var(--white);font-weight:400;line-height:1.1;
+}
+.nc-promo-headline em{font-style:italic;color:var(--pink-lt)}
+.nc-promo-desc{
+  font-size:.78rem;color:rgba(255,255,255,.5);
+  line-height:1.85;max-width:460px;
+}
+.nc-code-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;
+}
+.nc-code{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.4rem,3vw,2rem);
+  font-style:italic;color:var(--pink-lt);
+  letter-spacing:.08em;
+  background:rgba(232,160,176,.08);
+  border:1px dashed rgba(232,160,176,.3);
+  padding:10px 24px;
+}
+.nc-copy-btn{
+  background:rgba(232,160,176,.12);
+  border:1px solid rgba(232,160,176,.25);
+  color:var(--pink-lt);
+  font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:10px 18px;cursor:pointer;
+  transition:all .25s;font-family:'DM Sans',sans-serif;font-weight:600;
+}
+.nc-copy-btn:hover{background:var(--pink);color:var(--black)}
 
 /* ═══════════════════════
    GALLERY
@@ -707,7 +930,9 @@ setTimeout(function(){
 
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
+  <a href="#about" class="mm-l">About</a>
   <a href="#services" class="mm-l">Services</a>
+  <a href="#new-clients" class="mm-l">New Clients</a>
   <a href="#gallery" class="mm-l">Gallery</a>
   <a href="#testimonials" class="mm-l">Reviews</a>
   <a href="#faq" class="mm-l">FAQ</a>
@@ -719,7 +944,9 @@ setTimeout(function(){
 <nav id="nav">
   <div class="nav-logo">Flawless<em>Wig</em> Studio</div>
   <ul class="nav-links">
+    <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
+    <li><a href="#new-clients">New Clients</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -768,6 +995,98 @@ setTimeout(function(){
     <span>Silk Press</span><span class="sep">&#x2726;</span>
   </div>
 </div>
+
+<!-- ═══ ABOUT ME ═══ -->
+<section class="about" id="about">
+  <!-- background photo -->
+  <div class="about-bg">
+    <img src="img5.jpeg" alt="Flawless Wig Studio">
+  </div>
+
+  <div class="about-content">
+    <div class="about-tag">Meet Your Stylist</div>
+    <h2 class="about-h2">The Art of<br><em>Flawless</em></h2>
+    <div class="about-name-line">Founder &amp; Lead Stylist — Flawless Wig Studio</div>
+
+    <p class="about-quote">"I started this studio because I believe every woman deserves to feel effortlessly beautiful — and I've made it my mission to deliver exactly that, every single time."</p>
+
+    <p class="about-bio-text">
+      Hey, I'm the face behind <strong>Flawless Wig Studio</strong>. What started as a passion for hair transformed into a full-time craft — and I haven't looked back since. I specialize in <strong>undetectable lace melts</strong>, custom styling, and secure installs that last. Every client who sits in my chair gets my full attention, my best technique, and a result they're obsessed with.
+    </p>
+
+    <!-- credential pills -->
+    <div class="about-creds">
+      <span class="about-cred"><span class="about-cred-dot"></span>5+ Years Experience</span>
+      <span class="about-cred"><span class="about-cred-dot"></span>500+ Installs</span>
+      <span class="about-cred"><span class="about-cred-dot"></span>5.0 ★ Google Rating</span>
+      <span class="about-cred"><span class="about-cred-dot"></span>47+ Reviews</span>
+      <span class="about-cred"><span class="about-cred-dot"></span>Licensed Stylist</span>
+    </div>
+
+    <!-- social links -->
+    <div class="about-social-row">
+      <a href="https://instagram.com" target="_blank" rel="noopener" class="about-soc">Instagram</a>
+      <a href="https://tiktok.com" target="_blank" rel="noopener" class="about-soc">TikTok</a>
+      <a href="https://facebook.com" target="_blank" rel="noopener" class="about-soc">Facebook</a>
+    </div>
+
+    <button class="btn btn-pink" onclick="openBooking('General')" style="padding:12px 28px">Book With Me</button>
+  </div>
+</section>
+
+<!-- ═══ NEW CLIENTS ═══ -->
+<section class="new-clients" id="new-clients">
+  <div class="nc-top">
+    <div class="nc-tag">First Visit?</div>
+    <h2 class="nc-h2">Welcome,<br><em>New Client</em></h2>
+    <p class="nc-intro">Everything you need to know before your first appointment — so you walk in relaxed and walk out obsessed.</p>
+  </div>
+
+  <!-- staggered dark/light card grid -->
+  <div class="nc-grid">
+
+    <div class="nc-card dark">
+      <div class="nc-card-num">01</div>
+      <div class="nc-card-icon">&#x1F4CB;</div>
+      <div class="nc-card-title">What to Expect</div>
+      <p class="nc-card-text">We start with a quick consultation about your hair goals and lifestyle. Then I handle everything — lace prep, adhesive, styling — so you leave looking completely natural and feeling your best.</p>
+    </div>
+
+    <div class="nc-card light">
+      <div class="nc-card-num">02</div>
+      <div class="nc-card-icon">&#x1F6BF;</div>
+      <div class="nc-card-title">Come With Clean Hair</div>
+      <p class="nc-card-text">Arrive with your natural hair freshly washed, blown out, and laid flat. No braids, twists, or product buildup — clean, flat hair gives you the best possible install and the longest-lasting result.</p>
+    </div>
+
+    <div class="nc-card light">
+      <div class="nc-card-num">03</div>
+      <div class="nc-card-icon">&#x1F454;</div>
+      <div class="nc-card-title">Have Your Wig Ready</div>
+      <p class="nc-card-text">Bring your wig pre-plucked if possible — but don't stress if not, I can customize the hairline. Need help sourcing a wig? Reach out before your appointment and I'll point you in the right direction.</p>
+    </div>
+
+    <div class="nc-card dark">
+      <div class="nc-card-num">04</div>
+      <div class="nc-card-icon">&#x23F0;</div>
+      <div class="nc-card-title">Plan Your Time</div>
+      <p class="nc-card-text">A typical install takes 2–3 hours depending on the service. Come fed, relaxed, and ready to be transformed. Good work takes time — and yours is worth every minute.</p>
+    </div>
+
+  </div>
+
+  <!-- promo strip -->
+  <div class="nc-bottom">
+    <div class="nc-promo-label">✦ New Client Exclusive</div>
+    <h3 class="nc-promo-headline">10% Off Your<br><em>First Install</em></h3>
+    <p class="nc-promo-desc">First-time clients get 10% off any wig install service. Use the code below when booking, or mention it at your appointment.</p>
+    <div class="nc-code-row">
+      <div class="nc-code">FLAWLESS10</div>
+      <button class="nc-copy-btn" onclick="navigator.clipboard.writeText('FLAWLESS10').then(function(){ this.textContent='Copied!'; var b=this; setTimeout(function(){ b.textContent='Copy Code'; },2000); }.bind(this))">Copy Code</button>
+    </div>
+    <button class="btn btn-pink" onclick="openBooking('General')" style="padding:13px 32px;font-size:.62rem">Book Your First Appointment &#x2197;</button>
+  </div>
+</section>
 
 <!-- ═══ SERVICES ═══ -->
 <section class="services" id="services">
@@ -1078,7 +1397,7 @@ setTimeout(function(){
       <p class="foot-desc">Book your flawless install today and step out with confidence. Where Beauty Meets Precision.</p>
       <div class="newsletter"><input type="email" id="footerEmail" placeholder="Your email..."><button id="footerSubscribe">Subscribe</button></div>
     </div>
-    <div class="foot-col"><h4>Pages</h4><ul><li><a href="#">Home</a></li><li><a href="#services">Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="foot-col"><h4>Pages</h4><ul><li><a href="#">Home</a></li><li><a href="#about">About</a></li><li><a href="#new-clients">New Clients</a></li><li><a href="#services">Services</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li></ul></div>
     <div class="foot-col"><h4>Info</h4><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Payment Methods</a></li><li><a href="#">Policies</a></li><li><a href="#">Returns</a></li></ul></div>
     <div class="foot-col"><h4>Social</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li><li><a href="#">Facebook</a></li><li><a href="#">YouTube</a></li></ul></div>
   </div>
@@ -1149,9 +1468,17 @@ window.addEventListener('scroll',function(){ floatTop.classList.toggle('visible'
 floatTop.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
 
 /* ── PROMO BANNER ── */
+var promoBanner = document.getElementById('promoBanner');
+var navEl = document.getElementById('nav');
+function setNavTop(){
+  var bh = promoBanner.classList.contains('hidden') ? 0 : promoBanner.offsetHeight;
+  navEl.style.top = bh + 'px';
+}
+setNavTop();
+window.addEventListener('resize', setNavTop);
 document.getElementById('promoX').addEventListener('click',function(){
-  document.getElementById('promoBanner').classList.add('hidden');
-  document.getElementById('nav').classList.add('banner-gone');
+  promoBanner.classList.add('hidden');
+  setTimeout(setNavTop, 420);
 });
 document.getElementById('promoCta').addEventListener('click',function(){ openBooking('General'); });
 
