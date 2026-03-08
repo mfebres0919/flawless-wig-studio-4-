@@ -681,16 +681,22 @@ nav.solid{background:rgba(10,10,10,.98)}
 @media(min-width:780px){.contact-grid{grid-template-columns:1fr 1fr;max-width:960px;margin:0 auto}}
 @media(min-width:1200px){.contact-grid{max-width:1100px}}
 .contact-info{display:flex;flex-direction:column;gap:12px;margin-top:22px}
-.c-row{display:flex;align-items:center;gap:11px;font-size:.76rem;color:rgba(255,255,255,.52)}
+.c-row{display:flex;align-items:center;gap:11px;font-size:.76rem;color:rgb(255, 255, 255)}
+.c-row a{color:rgb(255, 255, 255);text-decoration:none}
+.c-row a:hover{color:var(--pink)}
 .c-ico{width:32px;height:32px;border-radius:50%;border:1px solid rgba(232,160,176,.26);display:flex;align-items:center;justify-content:center;font-size:.74rem;color:var(--pink);flex-shrink:0}
 .contact-form{display:flex;flex-direction:column;gap:14px}
 .field label{display:block;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--pink);margin-bottom:5px;font-weight:600}
-.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:12px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;transition:border-color .25s,background .25s;-webkit-appearance:none;appearance:none}
+.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:12px 14px;color:var(--white);-webkit-text-fill-color:var(--white);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;transition:border-color .25s,background .25s;-webkit-appearance:none;appearance:none}
+.field input:-webkit-autofill,.field textarea:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #1a1a1a inset !important;-webkit-text-fill-color:var(--white) !important;caret-color:var(--white)}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23E8A0B0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer}
 .field select option{background:var(--black3);color:var(--white)}
 .field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.2)}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink);background:rgba(232,160,176,.04)}
 .field textarea{resize:none;height:108px}
+.white {
+  color: white !important;
+}
 
 /* ═══════════════════════
    POLICIES
@@ -1481,9 +1487,9 @@ setTimeout(function(){
 <section class="contact" id="contact">
   <div class="contact-grid">
     <div>
-      <div class="tag">Get In Touch</div>
-      <h2 class="display">Contact<br><em>Us</em></h2>
-      <p style="font-size:.76rem;line-height:1.85;color:rgba(255,255,255,.44);margin-top:12px">Have a question? We'd love to hear from you. Fill out the form and we'll get back to you as soon as possible.</p>
+      <div class="tag" style="color:var(--pink)">Get In Touch</div>
+      <h2 class="display" style="color:var(--white)">Contact<br><em>Us</em></h2>
+      <p class="white" style="font-size:.76rem;line-height:1.85;color:rgba(255,255,255,.75);margin-top:12px">Have a question? We'd love to hear from you. Fill out the form and we'll get back to you as soon as possible.</p>
       <div class="contact-info">
         <div class="c-row"><div class="c-ico">&#9993;</div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31585f575e71575d50465d54424246585642454455585e1f525e5c">[email&#160;protected]</a></div>
         <div class="c-row"><div class="c-ico">&#9742;</div>(877) 297-5454</div>
@@ -1491,10 +1497,14 @@ setTimeout(function(){
       </div>
     </div>
     <div class="contact-form">
-      <div class="field"><label>Your Name</label><input type="text" placeholder="e.g. Jasmine Smith" autocomplete="name"></div>
-      <div class="field"><label>Email</label><input type="email" placeholder="you@email.com" autocomplete="email"></div>
-      <div class="field"><label>Your Question</label><textarea placeholder="What would you like to know?" style="min-height:140px"></textarea></div>
-      <button class="btn btn-pink" style="align-self:flex-start;">Send Message</button>
+      <div class="field"><label for="contactName">Your Name</label><input type="text" id="contactName" name="name" placeholder="e.g. Jasmine Smith" autocomplete="name"></div>
+      <div class="field"><label for="contactEmail">Email</label><input type="email" id="contactEmail" name="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="field"><label for="contactMsg">Your Question</label><textarea id="contactMsg" name="message" placeholder="What would you like to know?" style="min-height:140px"></textarea></div>
+      <input type="hidden" name="_subject" value="New message from Flawless Wig Studio website">
+      <input type="hidden" name="_next" value="">
+      <button class="btn btn-pink" id="contactSubmit" style="align-self:flex-start;">Send Message</button>
+      <p id="contactSuccess" style="display:none;font-size:.72rem;color:var(--pink);margin-top:4px;">✓ Message sent! We'll get back to you soon.</p>
+      <p id="contactError" style="display:none;font-size:.72rem;color:#ff6b6b;margin-top:4px;">Something went wrong. Please try again.</p>
     </div>
   </div>
 </section>
@@ -1573,6 +1583,38 @@ document.getElementById('epSubmit').addEventListener('click', function(){
     setTimeout(hideEmailPopup, 4000);
   }, function(){
     document.getElementById('epBody').innerHTML='<div style="text-align:center;padding:18px 0"><div style="font-size:3rem;margin-bottom:11px">&#x26A0;</div><p style="font-size:.78rem;color:rgba(255,255,255,.44);line-height:1.8">Something went wrong. Please try again.</p><button onclick="hideEmailPopup()" style="margin-top:20px;display:inline-flex;padding:10px 24px;border-radius:100px;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;background:rgba(255,255,255,.1);color:#fff;border:none;cursor:pointer;font-family:DM Sans,sans-serif;">Close</button></div>';
+  });
+});
+
+/* ── CONTACT FORM ── */
+document.getElementById('contactSubmit').addEventListener('click', function(){
+  var name = document.getElementById('contactName').value.trim();
+  var email = document.getElementById('contactEmail').value.trim();
+  var message = document.getElementById('contactMsg').value.trim();
+  var btn = document.getElementById('contactSubmit');
+  var success = document.getElementById('contactSuccess');
+  var error = document.getElementById('contactError');
+  if(!name || !email || !message) return;
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  var formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('message', message);
+  formData.append('_subject', 'New message from Flawless Wig Studio website');
+  fetch('https://formspree.io/f/REPLACE_WITH_FORM_ID', {
+    method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+  }).then(function(res){
+    if(res.ok){
+      success.style.display = 'block'; error.style.display = 'none';
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
+      document.getElementById('contactMsg').value = '';
+      btn.textContent = 'Sent!';
+    } else {
+      error.style.display = 'block'; btn.textContent = 'Send Message'; btn.disabled = false;
+    }
+  }).catch(function(){
+    error.style.display = 'block'; btn.textContent = 'Send Message'; btn.disabled = false;
   });
 });
 
